@@ -1,8 +1,20 @@
+---
+title: "Practical 0 - Reproducible Research in R with the Tidyverse"
+author: "Heather MacTavish"
+date: "2026-05-15"
+output: html_document
+---
+
+
 ```{r setup, include=FALSE}
 # Global knitr options. These propagate to every chunk unless overridden locally.
+
 # - echo=TRUE      : show the code that produced each output
+
 # - message/warning=FALSE : keep package startup chatter out of the report
+
 # - fig.align='center', fig.width/height : sensible defaults for plots
+
 knitr::opts_chunk$set(
   echo       = TRUE,
   message    = FALSE,
@@ -221,7 +233,9 @@ library(tidyverse)   # loads dplyr, tidyr, ggplot2, readr, tibble, purrr, string
 This lab will need the following 3 packages so you can install new packages like this:
 
 ```{r eval=FALSE}
-install.packages(c("tidyverse", "datasauRus", "here"))
+# I have these installed already
+
+#install.packages(c("tidyverse", "datasauRus", "here"))
 ```
 
 There is no need to run `library(dplyr)` *and* `library(tidyverse)` - the latter loads the former. Stick with `library(tidyverse)` for analysis scripts; load individual packages only when writing a package or a constrained Shiny app.
@@ -469,27 +483,74 @@ The original Datasaurus is from Alberto Cairo's [blog post](http://www.thefuncti
 
 **Q1.** How many rows and columns does `datasaurus_dozen` contain, and what are the variables?
 
+```{r}
+str(datasaurus_dozen)
+```
+
+
+
+The dataset contains 1,846 rows and 3 columns. dataset is which dataset the data are from, x is the x-values, and y are the y values.
+
 **Q2.** Uncomment and complete the ggplot code to plot `y` vs `x` for the `dino` subset, and compute the Pearson correlation.
 
 ```{r}
 dino_data <- datasaurus_dozen |>
   filter(dataset == "dino")
 
-#ggplot(dino_data, aes( # complete...
+ggplot(dino_data, aes(x = x, y = y)) +
+  geom_point() +
+  theme_minimal()
 
-dino_data |> summarise(r = cor(x, y))
+dino_data |> 
+  summarise(r = cor(x, y))
 ```
+
+The Pearson's correlation is -0.064. There is essentially no linear relationship.
 
 **Q3.** Repeat for the `star` dataset. Compare its `r` to that of `dino`.
 
+```{r}
+star_data <- datasaurus_dozen |>
+  filter(dataset == "star")
+
+ggplot(star_data, aes(x = x, y = y)) +
+  geom_point() +
+  theme_minimal()
+
+star_data |> 
+  summarise(r = cor(x, y))
+```
+
+The Pearson's correlation is -0.063, which is very close to the Pearson's correlation of the dinosaur (-0.064). There is essentially no linear relationship.
+
+
 **Q4.** Repeat for the `circle` dataset. Compare its `r` to that of `dino`.
+
+```{r}
+circle_data <- datasaurus_dozen |>
+  filter(dataset == "circle")
+
+ggplot(circle_data, aes(x = x, y = y)) +
+  geom_point() +
+  theme_minimal()
+
+circle_data |> 
+  summarise(r = cor(x, y))
+```
+
+The Pearson's correlation is -0.068, which is very close to the Pearson's correlation of the dinosaur (-0.064). There is essentially no linear relationship.
+
+
 
 **Q5.** Complete the following code to visualise all the datasets at once with faceting and calculate the statistics as a single grouped `summarise` command.
 
 ```{r fig.width=8, fig.height=8}
-ggplot(datasaurus_dozen, aes(x = x, y = y, colour = dataset)) +
+ggplot(datasaurus_dozen, 
+       aes(x = x, y = y, 
+           colour = dataset)) +
   geom_point(size = 0.7) +
-  facet_wrap(~ dataset, ncol = 3) +
+  facet_wrap(~ dataset, 
+             ncol = 3) +
   theme_minimal() +
   theme(legend.position = "none",
         axis.text       = element_blank(),
@@ -499,12 +560,19 @@ datasaurus_dozen |>
   group_by(dataset) |>
   summarise(
     mean_x = mean(x),
-    #... complete this to calculate the mean for y, standard deviation for x and y, and pearson correlation
+    sd_x = sd(x),
+    mean_y = mean(y),
+    sd_y = sd(y),
+    r = cor(x, y),
     .groups = "drop"
   )
 ```
 
 **Q6.** Write 2–3 sentences in your knitted document on why these summary statistics are nearly identical despite the obvious visual differences, and what this implies for exploratory data analysis on real clinical datasets.
+
+
+Although the datasets have very different visual shapes, their summary statistics are nearly identical because the points are distributed around similar centers and spreads. The mean_x, mean_y, standard deviations, and Pearson's correlations are all almost the same across datasets, meaning the overall numerical properties are very similar even though the actual patterns are very visually different. This demonstrates that summary statistics alone can hide important structures, so visualizing data is very important in exploratory data analysis, especially for clinical datasets where clusters, non-linear trends, or outliers may be clinically meaningful.
+
 
 # Exercise: Air Quality Data
 
@@ -520,7 +588,45 @@ R ships with `airquality` (daily air-quality measurements, NY 1973). Despite its
 ```{r}
 aq <- as_tibble(airquality)
 
-#...
+head(aq, 10)
+summary(aq)
+
+# (a) Drop rows where `Ozone` is missing.
+
+aq <- aq %>%
+  filter(!is.na(Ozone))
+
+
+# (b) Add a column `month_name` with the month spelled out (`"May"`, `"Jun"`, …). Hint: `month.abb` is a built-in vector.
+
+aq <- aq %>%
+  mutate(
+    month_name = month.abb[Month]
+  )
+
+# (c) Compute mean `Ozone`, mean `Temp`, and the count of complete days per month.
+
+aq %>%
+  summarise(
+    mean_ozone = mean(Ozone),
+    sd_temp = sd(Temp),
+    complete_days = sum(complete.cases(Ozone, Temp))
+  )
+
+
+# (d) Plot `Ozone` against `Temp`, coloured by month, with a smoothed trend line (`geom_smooth(method = "lm")`)
+
+aq %>%
+  ggplot(aes(x = Ozone, y = Temp, colour = month_name)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    x      = "Ozone (ppb)",
+    y      = "Temperature (degrees F)",
+    colour = "Month",
+    title  = "Daily mean ozone versus maximum daily temperature"
+  ) +
+  theme_minimal()
 ```
 
 # Git workflow for this practical
