@@ -607,6 +607,7 @@ aq <- aq %>%
 # (c) Compute mean `Ozone`, mean `Temp`, and the count of complete days per month.
 
 aq %>%
+  group_by(month_name) %>%
   summarise(
     mean_ozone = mean(Ozone),
     sd_temp = sd(Temp),
