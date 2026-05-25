@@ -123,15 +123,20 @@ SepsisLabel	            For sepsis patients, SepsisLabel is 1 if t≥tsepsis−6
 !!!!!!!!! DONT FORGET TO WRITE THIS PART!!!!!!
 
 
+1. Resp	Respiration rate (breaths per minute)
+2. SBP	Systolic BP (mm Hg)
+3. Temperature >38°C or <36°C
+
+
 Box 1.
 SIRS (Systemic Inflammatory Response Syndrome)
 Two or more of:
 
-Temperature >38°C or <36°C
+*Temperature >38°C or <36°C*
 
 Heart rate >90/min
 
-Respiratory rate >20/min or Paco2 <32 mm Hg (4.3 kPa)
+*Respiratory rate >20/min or Paco2 <32 mm Hg (4.3 kPa)*
 
 White blood cell count >12 000/mm3 or <4000/mm3 or >10% immature bands
 
@@ -139,14 +144,14 @@ From Bone et al.9
 
 Box 4.
 qSOFA (Quick SOFA) Criteria
-Respiratory rate ≥22/min
+*Respiratory rate ≥22/min*
 
 Altered mentation
 
-Systolic blood pressure ≤100 mm Hg
+*Systolic blood pressure ≤100 mm Hg*
 
 
-
+Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801–10. doi:10.1001/jama.2016.0287
 
 ---
 
@@ -184,18 +189,28 @@ We split the data **before** any exploration so that analysis choices cannot be 
 sepsis <- sepsis |>
   mutate(SepsisLabel = factor(SepsisLabel,
                               levels = c(1, 0),
-                              labels = c("Sepsis", "No Sepsis")))
+                              labels = c("Sepsis", 
+                                         "No Sepsis")))
 
 # splitting
 split <- initial_split(sepsis, prop = 0.75, strata = SepsisLabel)
+
 train <- training(split)
 test  <- testing(split)
 
-cat("Training rows:", nrow(train), "\n")
+cat("Training rows:", nrow(train), "\n", "\n")
 cat("Test rows:    ", nrow(test),  "\n")
 ```
 
 **Q3. (1 mark)** What percentage of our dataset is being assigned to test?
+
+It was splitting it at 75% which means that 25% of the data will be used for the train set. I will check it below:
+
+```{r}
+nrow(test) / (nrow(test) + nrow(train))
+```
+
+It is 25%.
 
 --- 
 
@@ -206,7 +221,7 @@ Again, do your EDA on `train` only - we do not look at `test` until Section 6.
 ### 3.1 Class balance
 
 
-**Q4. (2 marks).** Uncomment and csomplete the code below to check the class balance in the **training** set.
+**Q4. (2 marks).** Uncomment and complete the code below to check the class balance in the **training** set.
 `count()` tallies rows per group; add a `prop` column to show each class as a fraction of the total.
 
 ```{r q4-class-balance}
