@@ -292,7 +292,17 @@ train |>
 **Q7. (1 mark)**
 Modify the above to plot only missingness for Sepsis positive data
 ```{r missingness-sepsis-bar, fig.height = 5}
-# add your code
+train |>
+  filter(SepsisLabel == "Sepsis") |>
+  summarise(across(everything(), ~ mean(is.na(.x)))) |>
+  pivot_longer(everything(),
+               names_to = "variable", values_to = "pct_missing") |>
+  filter(pct_missing > 0) |>
+  ggplot(aes(pct_missing, fct_reorder(variable, pct_missing))) +
+  geom_col(fill = "steelblue") +
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "Missing data by variable (training set) for only sepsis patients",
+       x = "Percent missing", y = NULL)
 ```
 
 **Q8. (3 marks)** Which three variables have the highest missingness? In an ICU context, why might a lab value be missing - is this likely to be random, or informative? Does this mean you should drop or impute these values?
