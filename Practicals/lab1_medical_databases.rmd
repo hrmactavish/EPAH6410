@@ -469,6 +469,14 @@ The two classes overlap heavily in the PC1/PC2 projection — this is common in 
 
 **Q10 (2 marks).** What does this tell us about the potential decision boundary our predictive model would have to fit?  Which models easily support this type of boundary?
 
+!!!!!!!!
+
+Because it does not fit a linear combination easy, a non-linear model that has flexible boundaries like Random Forests would make the most sense.
+
+
+!!!!! *NEED A BETTER ANSWER HERE*
+
+
 ---
 
 ## 4 Feature Engineering
