@@ -225,9 +225,9 @@ Again, do your EDA on `train` only - we do not look at `test` until Section 6.
 `count()` tallies rows per group; add a `prop` column to show each class as a fraction of the total.
 
 ```{r q4-class-balance}
-#train |>
-#  count(___) |>
-#  mutate(prop = ___ / sum(___))
+train |>
+ count(SepsisLabel) |>
+ mutate(prop =  n / sum(n))
 ```
 
 
