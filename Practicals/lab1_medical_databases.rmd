@@ -307,6 +307,36 @@ train |>
 
 **Q8. (3 marks)** Which three variables have the highest missingness? In an ICU context, why might a lab value be missing - is this likely to be random, or informative? Does this mean you should drop or impute these values?
 
+It looks like the top six all have 100% missingness, so I am going to check the actual percent missingness
+
+```{r}
+train |>
+  filter(SepsisLabel == "Sepsis") |>
+  summarise(across(everything(), ~ mean(is.na(.x)))) |>
+  pivot_longer(everything(),
+               names_to = "variable", values_to = "pct_missing") |>
+  filter(pct_missing > 0) |>
+  arrange(desc(pct_missing)) %>%
+  head(6)
+```
+
+There are in fact six with 100% missingness: AST, Alkalinephos, Bilirubin_direct, Bilirubin_total, TroponinI, Fibrinogen
+
+AST	Aspartate transaminase (IU/L)
+
+Alkalinephos	Alkaline phosphatase (IU/L)
+
+Bilirubin_direct	Bilirubin direct (mg/dL)
+
+Bilirubin_total	Total bilirubin (mg/dL)
+
+TroponinI	Troponin I (ng/mL)
+
+Fibrinogen	(mg/dL)
+
+They are informative because that means that specific test was not ordered for all of the sepsis patients.
+
+!!!!!!!! WRITE THIS LOL
 
 ### 3.3 Vital-sign distributions by outcome
 
