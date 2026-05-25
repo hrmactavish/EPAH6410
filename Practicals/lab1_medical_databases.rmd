@@ -253,6 +253,27 @@ train |>
 
 **Q6. (3 marks)**  Given the class imbalance, which of the following 2 metrics might be the most misleading and why? accuracy, precision, recall, F1-score, ROC-AUC, PR-AUC?
 
+!!!!!!!!
+
+
+accuracy = TP + TN / (TP + TN + FP + FN)
+
+precision = TP / (TP + FP)
+
+recall = TP / (TP + FN)
+
+F1-score = (2 * Precision * Recall) / (Precision + Recall)
+
+ROC-AUC: TPR = TP / (TP + FN) vs. FPR = FP / (FP + TN)
+
+PR-AUC: Precision = TP / (TP + FP) vs. Recall = TP / (TP + FN)
+
+
+Accuracy and ROC-AUC are the two most misleading metrics.
+
+!!!!!!! FINSIH THIS ANSWER
+
+
 ### 3.2 Missingness
 
 ```{r missingness-bar, fig.height = 5}
