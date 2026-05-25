@@ -359,6 +359,21 @@ train |>
 **Q9 (2 marks).** Modify the code above to plot the distribution of **three other lab variables** of your choice. 
 
 ```{r q9-lab-density}
+# I'm addig WBC, Glucose, and Creatinine
+vitals <- c("WBC", "Glucose", "Creatinine")
+
+train |>
+  select(all_of(vitals), SepsisLabel) |>
+  pivot_longer(-SepsisLabel) |>
+  filter(!is.na(value)) |>
+  ggplot(aes(value, fill = SepsisLabel)) +
+  geom_density(alpha = 0.55, colour = NA) +
+  facet_wrap(~ name, scales = "free", ncol = 4) +
+  scale_fill_manual(values = c("No Sepsis" = "grey60",
+                               "Sepsis"    = "firebrick")) +
+  labs(x = NULL, y = "Density", fill = NULL,
+       title = "Laboratory value distributions by sepsis status")
+
 ```
 
 Correlation plot of all variables by similarity of their correlation in Sepsis and Non-Sepsis
