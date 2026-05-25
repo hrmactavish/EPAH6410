@@ -233,17 +233,22 @@ train |>
 
 **Q5. (2 mark)** Using your solution to Q4, complete this plotting code to create a barplot of the relative sepsis label balance.  Change the colour of the sepsis bar to green.
 
-```{r class-balance-plot, fig.height = 2.8}
-#code from your answer to Q3,
-#     |>
-#  ggplot(aes(SepsisLabel, prop, fill = SepsisLabel)) +
-#  geom_col() +
-#  geom_text(aes(label = scales::percent(prop, accuracy = 0.01)), vjust = -0.4) +
-#  scale_y_continuous(labels = scales::percent) +
-#  scale_fill_manual(values = c("No Sepsis" = "grey60", 
-#                               "Sepsis"    = "firebrick")) +
-#  labs(x = NULL, y = "Percentage of Trainining Data", title = "Sepsis Class Balance") +
-#  theme(legend.position = "none")
+```{r class-balance-plot, fig.height = 4}
+train |>
+ count(SepsisLabel) |>
+ mutate(prop =  n / sum(n)) |>
+  ggplot(aes(SepsisLabel, prop, fill = SepsisLabel)) +
+  geom_col() +
+  geom_text(aes(
+    label = scales::percent(prop, accuracy = 0.01)), 
+    vjust = -0.4) +
+ scale_y_continuous(labels = scales::percent) +
+ scale_fill_manual(values = c("No Sepsis" = "grey60",
+                              "Sepsis"    = "green4")) +
+ labs(x = NULL, 
+      y = "Percentage of Trainining Data", 
+      title = "Sepsis Class Balance") +
+ theme(legend.position = "none")
 ```
 
 **Q6. (3 marks)**  Given the class imbalance, which of the following 2 metrics might be the most misleading and why? accuracy, precision, recall, F1-score, ROC-AUC, PR-AUC?
