@@ -700,6 +700,9 @@ preds |>
 
 Now let's investigate whether the model work equally well/badly across patient groups?
 
+
+-- can delete this and answer it by looking at the plot on the html
+
 ```{r subgroup-auc, fig.height = 3.5}
 errors <- augment(final_fit)
 
