@@ -120,7 +120,33 @@ SepsisLabel	            For sepsis patients, SepsisLabel is 1 if t≥tsepsis−6
 *(Hint: look up how sepsis is clinically diagnosed.)*  
 
 
-!!!!!!!!!
+!!!!!!!!! DONT FORGET TO WRITE THIS PART!!!!!!
+
+
+Box 1.
+SIRS (Systemic Inflammatory Response Syndrome)
+Two or more of:
+
+Temperature >38°C or <36°C
+
+Heart rate >90/min
+
+Respiratory rate >20/min or Paco2 <32 mm Hg (4.3 kPa)
+
+White blood cell count >12 000/mm3 or <4000/mm3 or >10% immature bands
+
+From Bone et al.9
+
+Box 4.
+qSOFA (Quick SOFA) Criteria
+Respiratory rate ≥22/min
+
+Altered mentation
+
+Systolic blood pressure ≤100 mm Hg
+
+
+
 
 ---
 
