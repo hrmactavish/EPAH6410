@@ -566,6 +566,13 @@ xgb_spec <- boost_tree(
 ```
 
 
+
+!!!!!! DEFINITELY DONT FORGET TO DO THIS 
+
+- i dont think log reg uses hyperparametesrs??
+
+
+
 ### 5.4 Tune all three models
 
 Now let's specify our workflow to use cross-validation to tune all models and compare across them.
@@ -622,13 +629,23 @@ rank_results(tuned, rank_metric = "pr_auc", select_best = TRUE) |>
   select(wflow_id, .metric, mean, std_err, rank)
 ```
 
+
+!!!!!!!!!!!!!!!
+
+
+
 **Q14 (3 marks).** By summarising and comparing the metrics output by this code, describe how each model performed relative to one another.
+
+
+!!!!!!!!!!!!!!!
 
 ---
 
 ## 6 Test-Set Evaluation
 
 In the real-world we'd try to optimise these models further and/or try some different architectures but lets just take our best model and continue to test evaluation.
+
+
 
 ### 6.1 Finalise the best model
 
@@ -671,6 +688,9 @@ preds |>
   scale_fill_gradient(low = "white", high = "firebrick") +
   labs(title = "Confusion matrix (threshold = 0.5)")
 ```
+
+
+!!!!!!!!!!!!!!!
 
 ---
 
@@ -716,6 +736,9 @@ bind_rows(
 **Q15 (2 marks).** Is there a subgroup where the model performs noticeably worse than the overall PR-AUC?
 Suggest one data-driven reason and one clinical reason that could explain the gap.
 
+
+!!!!!!!!!!!!!!!
+
 ### 7.2 Variable importance
 
 ```{r variable-importance, fig.height = 5}
@@ -745,6 +768,9 @@ importance_tbl |>
 **Q16 (2 marks).** Compare the top 3 most important variables to the three predictors you identified in Q1.
 Do they match? Write one sentence about any variable that surprised you.
 
+
+!!!!!!!!!!!!!!!
+
 ---
 
 ## 8 Discussion
@@ -753,6 +779,12 @@ Do they match? Write one sentence about any variable that surprised you.
 
 - What is the single biggest limitation of this analysis (consider the label definition, the static sampling approach, generalisability to other hospitals, etc.)?
 - Would you recommend deploying a model trained this way in a real ICU? If yes, under what monitoring conditions? If no, what would need to change first?
+
+
+!!!!!!!!!!!!!!!
+
+
+
 
 ---
 
