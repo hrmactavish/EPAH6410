@@ -227,7 +227,7 @@ Again, do your EDA on `train` only - we do not look at `test` until Section 6.
 ```{r q4-class-balance}
 train |>
  count(SepsisLabel) |>
- mutate(prop =  n / sum(n))
+ mutate(prop = n / sum(n))
 ```
 
 
@@ -236,15 +236,18 @@ train |>
 ```{r class-balance-plot, fig.height = 4}
 train |>
  count(SepsisLabel) |>
- mutate(prop =  n / sum(n)) |>
-  ggplot(aes(SepsisLabel, prop, fill = SepsisLabel)) +
+ mutate(prop = n / sum(n)) |>
+  ggplot(aes(SepsisLabel, 
+             prop, 
+             fill = SepsisLabel)) +
   geom_col() +
   geom_text(aes(
-    label = scales::percent(prop, accuracy = 0.01)), 
+    label = scales::percent(prop, 
+                            accuracy = 0.01)), 
     vjust = -0.4) +
  scale_y_continuous(labels = scales::percent) +
  scale_fill_manual(values = c("No Sepsis" = "grey60",
-                              "Sepsis"    = "green4")) +
+                              "Sepsis"    = "green")) +
  labs(x = NULL, 
       y = "Percentage of Trainining Data", 
       title = "Sepsis Class Balance") +
@@ -294,49 +297,27 @@ Modify the above to plot only missingness for Sepsis positive data
 ```{r missingness-sepsis-bar, fig.height = 5}
 train |>
   filter(SepsisLabel == "Sepsis") |>
-  summarise(across(everything(), ~ mean(is.na(.x)))) |>
+  summarise(across(everything(), 
+                   ~ mean(is.na(.x)))) |>
   pivot_longer(everything(),
-               names_to = "variable", values_to = "pct_missing") |>
+               names_to = "variable", 
+               values_to = "pct_missing") |>
   filter(pct_missing > 0) |>
-  ggplot(aes(pct_missing, fct_reorder(variable, pct_missing))) +
+  ggplot(aes(pct_missing, 
+             fct_reorder(variable, 
+                         pct_missing))) +
   geom_col(fill = "steelblue") +
-  scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_x_continuous(labels = scales::percent_format(
+    accuracy = 1)) +
   labs(title = "Missing data by variable (training set) for only sepsis patients",
        x = "Percent missing", y = NULL)
 ```
 
 **Q8. (3 marks)** Which three variables have the highest missingness? In an ICU context, why might a lab value be missing - is this likely to be random, or informative? Does this mean you should drop or impute these values?
 
-It looks like the top six all have 100% missingness, so I am going to check the actual percent missingness
 
-```{r}
-train |>
-  filter(SepsisLabel == "Sepsis") |>
-  summarise(across(everything(), ~ mean(is.na(.x)))) |>
-  pivot_longer(everything(),
-               names_to = "variable", values_to = "pct_missing") |>
-  filter(pct_missing > 0) |>
-  arrange(desc(pct_missing)) %>%
-  head(6)
-```
+!!!!!!
 
-There are in fact six with 100% missingness: AST, Alkalinephos, Bilirubin_direct, Bilirubin_total, TroponinI, Fibrinogen
-
-AST	Aspartate transaminase (IU/L)
-
-Alkalinephos	Alkaline phosphatase (IU/L)
-
-Bilirubin_direct	Bilirubin direct (mg/dL)
-
-Bilirubin_total	Total bilirubin (mg/dL)
-
-TroponinI	Troponin I (ng/mL)
-
-Fibrinogen	(mg/dL)
-
-They are informative because that means that specific test was not ordered for all of the sepsis patients.
-
-!!!!!!!! WRITE THIS LOL
 
 ### 3.3 Vital-sign distributions by outcome
 
@@ -360,10 +341,10 @@ train |>
 
 ```{r q9-lab-density}
 # I'm addig WBC, Glucose, and Creatinine
-vitals <- c("WBC", "Glucose", "Creatinine")
+labs <- c("WBC", "Glucose", "Creatinine")
 
 train |>
-  select(all_of(vitals), SepsisLabel) |>
+  select(all_of(labs), SepsisLabel) |>
   pivot_longer(-SepsisLabel) |>
   filter(!is.na(value)) |>
   ggplot(aes(value, fill = SepsisLabel)) +
@@ -476,6 +457,11 @@ Because it does not fit a linear combination easy, a non-linear model that has f
 
 !!!!! *NEED A BETTER ANSWER HERE*
 
+!!!!!
+
+**The substantial overlap between septic and non-septic patients suggests that the relationship between predictors and sepsis is not easily separated by a simple linear boundary.**
+
+**This indicates that more complex non-linear decision boundaries may be required. Models such as random forests and XGBoost can naturally capture these non-linear relationships and interactions between variables.**
 
 ---
 
@@ -492,9 +478,11 @@ add_features <- function(df) {
       pulse_pressure  = SBP - DBP,
       bun_creat_ratio = BUN / Creatinine,  # > 20 suggests pre-renal AKI
       age_group = cut(Age,
-                      breaks = c(-1, 40, 65, 80, 120),
-                      labels = c("<=40", "41-65", "66-80", "80+")),
-      shock_index = HR / SBP
+                      breaks = c(-1, 40, 65, 
+                                 80, 120),
+                      labels = c("<=40", "41-65", 
+                                 "66-80", "80+")),
+      shock_index = HR / SBP # added shock_index
     )
 }
 train <- add_features(train)
