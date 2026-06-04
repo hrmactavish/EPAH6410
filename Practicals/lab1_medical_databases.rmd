@@ -719,11 +719,9 @@ importance_tbl |>
 **Q17 (2 marks).** Compare the top 3 most important variables to the three predictors you identified in Q1.
 Do they match? Write one sentence about any variable that surprised you.
 
-The top 3 most important variables were lactate, MAP (mean arterial pressure), and WBC (Leukocyte count), these were very different from the three that I identified in Q1 (Resp, SBP, Temp). Resp and SBP both had an importance score of 0, and Temp had an importance score of (<0.1), whereas the top 3 most important variables had scores of approximately 1.5 (lactate), 0.8 (MAP), and 0.4 (WBC).
+The top three most important variables were lactate, MAP, and WBC, which did not match my Q2 predictions of Resp, SBP, and Temp. This makes sense looking back, as elevated lactate is one of the key indicators of septic shock in Sepsis-3 *(Singer et al., 2016)*, MAP looks at the entire state of circulation better than SBP alone, and high WBC is known as a classic sign of infection that would be present in sepsis cases as well. Resp and Temp had what appears to be xero importance, likely because they are elevated in many common ICU conditions and would not be specific to just sepsis. I was the most surprised that the respiratory rate had no importance, since it is used in both the SIRS  and qSOFA criteria.
 
-
-
-!!!!!!!!!!!!!!!
+Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801–10. doi:[10.1001/jama.2016.0287](https://jamanetwork.com/journals/jama/fullarticle/2492881)
 
 ---
 
@@ -734,15 +732,9 @@ The top 3 most important variables were lactate, MAP (mean arterial pressure), a
 - What is the single biggest limitation of this analysis (consider the label definition, the static sampling approach, generalisability to other hospitals, etc.)?
 - Would you recommend deploying a model trained this way in a real ICU? If yes, under what monitoring conditions? If no, what would need to change first?
 
+The biggest limitation of this analysis is the static sampling approach, where a single random observation was selected from each patient's ICU stay. This removes all temporal information and prevents the model from capturing trends over time, such as vital signs and laboratory values getting worse, which would be signs that someone is developing sepsis or their sepsis is worsening.
 
-
-
-
-
-!!!!!!!!!!!!!!!
-
-
-
+I would not recommend deploying this model in a real ICU because the best model only achieved a sensitivity of 0.42, meaning that more than half of the true sepsis cases would be missed. Before being deployed, the model should be developed using the actual time-series data to see if that improves the classification. 
 
 ---
 
