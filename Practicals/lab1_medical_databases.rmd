@@ -113,8 +113,6 @@ SepsisLabel	            For sepsis patients, SepsisLabel is 1 if t≥tsepsis−6
 
 
 
-
-
 **Q2. (2 marks)** Then choose **three variables** you hypothesise might be strong predictors of sepsis and write one sentence each explaining your reasoning.  There is no right or wrong answer to this, but you should think about your and problem before diving into the EDA and prediction!
 *(Hint: look up how sepsis is clinically diagnosed.)*  
 
@@ -132,7 +130,7 @@ I hypothesize that temperature will be a strong predictor of sepsis because feve
 
 
 Citation for how sepsis is clinically diagnosed:
-Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801–10. doi:[10.1001/jama.2016.0287](10.1001/jama.2016.0287)
+Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801–10. doi:[10.1001/jama.2016.0287](https://jamanetwork.com/journals/jama/fullarticle/2492881)
 
 ---
 
@@ -293,7 +291,7 @@ In an ICU context, missing lab values are typically not random and are usually i
 
 **I don't think that the values should be imputed because it is informative, but there have been studies done that suggest that another variable could be included in the prediction model that indicates it the variable has missingness or not, implying that for example, when looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect (Groenwold, 2020).**
 
-Groenwold RHH. Informative missingness in electronic health record systems: the curse of knowing. Diagn Progn Res. 2020 Jul 2;4:8. doi: 10.1186/s41512-020-00077-0. PMID: 32699824; PMCID: PMC7371469.
+Groenwold RHH. Informative missingness in electronic health record systems: the curse of knowing. Diagn Progn Res. 2020 Jul 2;4:8. doi: [10.1186/s41512-020-00077-0](https://doi.org/10.1186/s41512-020-00077-0). PMID: 32699824; PMCID: PMC7371469.
 
 ### 3.3 Vital-sign distributions by outcome
 
