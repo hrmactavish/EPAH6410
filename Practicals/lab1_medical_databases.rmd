@@ -60,7 +60,6 @@ We simplify the temporal problem to a static one by taking one random hourly rec
 
 **Q1. (2 marks)** Look up the [PhysioNet variable descriptions](https://physionet.org/content/challenge-2019/1.0.0/) and include an explanation of the dataset into this notebook (one row per variable: name, description, units).  
 
-!!!!!!!!!!
 
 Table 1: Columns in each training data file.
 
@@ -119,39 +118,21 @@ SepsisLabel	            For sepsis patients, SepsisLabel is 1 if t≥tsepsis−6
 **Q2. (2 marks)** Then choose **three variables** you hypothesise might be strong predictors of sepsis and write one sentence each explaining your reasoning.  There is no right or wrong answer to this, but you should think about your and problem before diving into the EDA and prediction!
 *(Hint: look up how sepsis is clinically diagnosed.)*  
 
+1. *Respiratory Rate (Resp)*
 
-!!!!!!!!! DONT FORGET TO WRITE THIS PART!!!!!!
+I hypothesize that respiratory rate will be a strong predictor of sepsis because an elevated respiratory rate is included in both the SIRS (Systemic Inflammatory Response Syndrome) and qSOFA (Quick Sequential Organ Failure Assessment) criteria and is often one of the earliest signs of systemic infection.
 
+2. *Systolic Blood Pressure (SBP)*
 
-1. Resp	Respiration rate (breaths per minute)
-2. SBP	Systolic BP (mm Hg)
-3. Temperature >38°C or <36°C
+I hypothesize that systolic blood pressure will be a strong predictor of sepsis because reduced blood pressure is commonly associated with sepsis-induced circulatory dysfunction and is included in the qSOFA criteria.
 
+3. *Temperature (Temp)*
 
-Box 1.
-SIRS (Systemic Inflammatory Response Syndrome)
-Two or more of:
-
-*Temperature >38°C or <36°C*
-
-Heart rate >90/min
-
-*Respiratory rate >20/min or Paco2 <32 mm Hg (4.3 kPa)*
-
-White blood cell count >12 000/mm3 or <4000/mm3 or >10% immature bands
-
-From Bone et al.9
-
-Box 4.
-qSOFA (Quick SOFA) Criteria
-*Respiratory rate ≥22/min*
-
-Altered mentation
-
-*Systolic blood pressure ≤100 mm Hg*
+I hypothesize that temperature will be a strong predictor of sepsis because fever (>38°C) or hypothermia (<36°C) are common physiological responses to infection and are included in the SIRS criteria used to identify patients at risk of sepsis.
 
 
-Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801–10. doi:10.1001/jama.2016.0287
+Citation for how sepsis is clinically diagnosed:
+Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801–10. doi:[10.1001/jama.2016.0287](10.1001/jama.2016.0287)
 
 ---
 
@@ -559,7 +540,35 @@ xgb_spec <- boost_tree(
 
 - i dont think log reg uses hyperparametesrs??
 
+**Logistic Regression**
+*penalty*
+Controls the strength of regularization.
+Larger values shrink coefficients more strongly.
 
+*mixture*
+Controls the balance between L1 (lasso) and L2 (ridge) penalties.
+0 = ridge, 1 = lasso.
+
+**Random Forest**
+*min_n*
+Minimum number of observations required in a terminal node.
+Larger values reduce overfitting and produce simpler trees.
+
+**XGBoost**
+*tree_depth*
+Maximum depth of each tree.
+
+*learn_rate*
+Step size used when updating the model.
+
+*loss_reduction*
+Minimum reduction in loss required before a split is made.
+
+*sample_size*
+Fraction of observations randomly sampled for each tree.
+
+*min_n*
+Minimum observations required in a terminal node.
 
 ### 5.4 Tune all three models
 
@@ -688,41 +697,8 @@ preds |>
 
 Now let's investigate whether the model work equally well/badly across patient groups?
 
+**Code deleted here due to not working**
 
--- can delete this and answer it by looking at the plot on the html
-
-```{r subgroup-auc, fig.height = 3.5}
-errors <- augment(final_fit)
-
-subgroup_auc <- function(df, group_var) {
-  df |>
-    group_by() |>
-    filter(n_distinct(SepsisLabel) == 2) |>
-    roc_auc(truth = SepsisLabel, .pred_Sepsis,
-            event_level = "second") |>
-    select(, .estimate)
-}
-
-overall_auc <- collect_metrics(final_fit) |>
-  filter(.metric == "pr_auc") |>
-  pull(.estimate)
-
-bind_rows(
-  errors |> subgroup_auc(Gender)    |> rename(subgroup = 1) |>
-    mutate(subgroup = as.character(subgroup), group = "Sex"),
-  errors |> subgroup_auc(age_group) |> rename(subgroup = 1) |>
-    mutate(subgroup = as.character(subgroup), group = "Age group")
-) |>
-  ggplot(aes(reorder(subgroup, .estimate), .estimate, fill = group)) +
-  geom_col() +
-  geom_hline(yintercept = overall_auc, linetype = 2, colour = "grey40") +
-  coord_flip() +
-  facet_grid(group ~ ., scales = "free_y", space = "free_y") +
-  labs(x = NULL, y = "PR-AUC",
-       title = "Subgroup PR-AUC",
-       subtitle = "Dashed line = overall test AUC") +
-  theme(legend.position = "none")
-```
 
 **Q15 (2 marks).** Is there a subgroup where the model performs noticeably worse than the overall PR-AUC?
 Suggest one data-driven reason and one clinical reason that could explain the gap.
@@ -732,7 +708,7 @@ Suggest one data-driven reason and one clinical reason that could explain the ga
 
 ### 7.2 Variable importance
 
-```{r variable-importance, fig.height = 5}
+```{r variable-importance, fig.height = 10}
 parsnip_fit <- extract_fit_parsnip(final_fit)
 
 importance_tbl <- if (grepl("^rf", best_id)) {
