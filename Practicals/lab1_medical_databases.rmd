@@ -185,13 +185,13 @@ cat("Test rows:    ", nrow(test),  "\n")
 
 **Q3. (1 mark)** What percentage of our dataset is being assigned to test?
 
-It was splitting it at 75% which means that 25% of the data will be used for the train set. I will check it below:
+It is splitting it at 75% which means that 25% of the data will be used for the test set and 75% of the data will be used for the train set. I will double check it below:
 
 ```{r}
 nrow(test) / (nrow(test) + nrow(train))
 ```
 
-It is 25%.
+It is in fact 25%.
 
 --- 
 
