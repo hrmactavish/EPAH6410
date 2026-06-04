@@ -426,13 +426,6 @@ The two classes overlap heavily in the PC1/PC2 projection — this is common in 
 
 !!!!!!!!
 
-Because it does not fit a linear combination easy, a non-linear model that has flexible boundaries like Random Forests would make the most sense.
-
-
-!!!!! *NEED A BETTER ANSWER HERE*
-
-!!!!!
-
 **The substantial overlap between septic and non-septic patients suggests that the relationship between predictors and sepsis is not easily separated by a simple linear boundary.**
 
 **This indicates that more complex non-linear decision boundaries may be required. Models such as random forests and XGBoost can naturally capture these non-linear relationships and interactions between variables.**
@@ -529,39 +522,93 @@ xgb_spec <- boost_tree(
 
 
 
-!!!!!! DEFINITELY DONT FORGET TO DO THIS 
+!!!!!! 
 
-- i dont think log reg uses hyperparametesrs??
+*Logistic Regression*
+**penalty**
+Controls the strength of regularization. *Larger values shrink coefficients more strongly.*
 
-**Logistic Regression**
-*penalty*
-Controls the strength of regularization.
-Larger values shrink coefficients more strongly.
+**mixture**
+Controls the balance between L1 (lasso) and L2 (ridge) penalties. 0 = ridge, 1 = lasso, 0 < mixture < 1 = elastic net model.
 
-*mixture*
-Controls the balance between L1 (lasso) and L2 (ridge) penalties.
-0 = ridge, 1 = lasso.
-
-**Random Forest**
-*min_n*
+*Random Forest*
+**min_n**
 Minimum number of observations required in a terminal node.
 Larger values reduce overfitting and produce simpler trees.
 
-**XGBoost**
-*tree_depth*
+!!!!!!!!!!
+
+# Arguments
+mode	
+A single character string for the prediction outcome mode. Possible values for this model are "unknown", "regression", "classification", or "censored regression".
+
+#engine	
+A single character string specifying what computational engine to use for fitting.
+
+#mtry	
+An integer for the number of predictors that will be randomly sampled at each split when creating the tree models.
+
+#trees	
+An integer for the number of trees contained in the ensemble.
+
+#min_n	
+An integer for the minimum number of data points in a node that are required for the node to be split further.
+
+
+
+!!!!!!!!
+
+*XGBoost*
+**tree_depth**
 Maximum depth of each tree.
 
-*learn_rate*
+**learn_rate**
 Step size used when updating the model.
 
-*loss_reduction*
+**loss_reduction**
 Minimum reduction in loss required before a split is made.
 
-*sample_size*
+**sample_size**
 Fraction of observations randomly sampled for each tree.
 
-*min_n*
+**min_n**
 Minimum observations required in a terminal node.
+
+
+
+
+!!!!!!!
+
+Arguments
+mode	
+A single character string for the prediction outcome mode. Possible values for this model are "unknown", "regression", "classification", or "censored regression".
+
+engine	
+A single character string specifying what computational engine to use for fitting.
+
+mtry	
+A number for the number (or proportion) of predictors that will be randomly sampled at each split when creating the tree models (specific engines only).
+
+trees	
+An integer for the number of trees contained in the ensemble.
+
+min_n	
+An integer for the minimum number of data points in a node that is required for the node to be split further.
+
+tree_depth	
+An integer for the maximum depth of the tree (i.e. number of splits) (specific engines only).
+
+learn_rate	
+A number for the rate at which the boosting algorithm adapts from iteration-to-iteration (specific engines only). This is sometimes referred to as the shrinkage parameter.
+
+loss_reduction	
+A number for the reduction in the loss function required to split further (specific engines only).
+
+sample_size	
+A number for the number (or proportion) of data that is exposed to the fitting routine. For xgboost, the sampling is done at each iteration while C5.0 samples once during training.
+
+stop_iter	
+The number of iterations without improvement before stopping (specific engines only).
 
 ### 5.4 Tune all three models
 
