@@ -291,7 +291,9 @@ The three variables with the highest missingness are:
 
 In an ICU context, missing lab values are typically not random and are usually informative, because clinicians only order certain tests when they suspect a specific condition (e.g., liver dysfunction or cardiac injury). This means that missingness can reflect clinical decision-making instead of data collection failure.
 
-**I don't think that the values should be imputed because it is informative, but there have been studies done that suggest that another variable could be included in the prediction model that indicates it the variable has missingness or not, implying that for example, when looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect.**
+**I don't think that the values should be imputed because it is informative, but there have been studies done that suggest that another variable could be included in the prediction model that indicates it the variable has missingness or not, implying that for example, when looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect (Groenwold, 2020).**
+
+Groenwold RHH. Informative missingness in electronic health record systems: the curse of knowing. Diagn Progn Res. 2020 Jul 2;4:8. doi: 10.1186/s41512-020-00077-0. PMID: 32699824; PMCID: PMC7371469.
 
 ### 3.3 Vital-sign distributions by outcome
 
