@@ -58,60 +58,59 @@ The [PhysioNet/CinC Challenge 2019](https://physionet.org/content/challenge-2019
 Each record (row) has 8 vital signs, 26 laboratory measurements, 6 demographic fields, and a binary `SepsisLabel` (set to 1 up to 6 hours *before* clinical onset so that early-warning models can be trained).
 We simplify the temporal problem to a static one by taking one random hourly record per patient, giving a standard tabular classification task with realistic clinical challenges: class imbalance, high missingness, and mixed data types.
 
+### Question 1
+
 **Q1. (2 marks)** Look up the [PhysioNet variable descriptions](https://physionet.org/content/challenge-2019/1.0.0/) and include an explanation of the dataset into this notebook (one row per variable: name, description, units).  
 
 
-Table 1: Columns in each training data file.
+```{r}
+variable_table <- data.frame(
+  Variable = c("HR", "O2Sat", "Temp", "SBP", "MAP", "DBP", "Resp", "EtCO2",
+               "BaseExcess", "HCO3", "FiO2", "pH", "PaCO2", "SaO2", "AST",
+               "BUN", "Alkalinephos", "Calcium", "Chloride", "Creatinine",
+               "Bilirubin_direct", "Glucose", "Lactate", "Magnesium",
+               "Phosphate", "Potassium", "Bilirubin_total", "TroponinI",
+               "Hct", "Hgb", "PTT", "WBC", "Fibrinogen", "Platelets",
+               "Age", "Gender", "Unit1", "Unit2", "HospAdmTime",
+               "ICULOS", "SepsisLabel"),
+  Description = c(
+    "Heart rate", "Pulse oximetry", "Temperature",
+    "Systolic blood pressure", "Mean arterial pressure",
+    "Diastolic blood pressure", "Respiration rate",
+    "End tidal carbon dioxide", "Measure of excess bicarbonate",
+    "Bicarbonate", "Fraction of inspired oxygen", "pH",
+    "Partial pressure of carbon dioxide from arterial blood",
+    "Oxygen saturation from arterial blood",
+    "Aspartate transaminase", "Blood urea nitrogen",
+    "Alkaline phosphatase", "Calcium", "Chloride",
+    "Creatinine", "Bilirubin direct", "Serum glucose",
+    "Lactic acid", "Magnesium", "Phosphate", "Potassium",
+    "Total bilirubin", "Troponin I", "Hematocrit",
+    "Hemoglobin", "Partial thromboplastin time",
+    "Leukocyte count", "Fibrinogen", "Platelets",
+    "Age (100 for patients 90 or above)", "Gender",
+    "Administrative identifier for ICU unit (MICU)",
+    "Administrative identifier for ICU unit (SICU)",
+    "Hours between hospital admission and ICU admission",
+    "ICU length of stay since ICU admission",
+    "Sepsis outcome label"
+  ),
+  Units = c(
+    "beats/min", "%", "Deg C", "mm Hg", "mm Hg", "mm Hg",
+    "breaths/min", "mm Hg", "mmol/L", "mmol/L", "%",
+    "N/A", "mm Hg", "%", "IU/L", "mg/dL", "IU/L",
+    "mg/dL", "mmol/L", "mg/dL", "mg/dL", "mg/dL",
+    "mg/dL", "mmol/dL", "mg/dL", "mmol/L", "mg/dL",
+    "ng/mL", "%", "g/dL", "seconds", "count*10^3/µL",
+    "mg/dL", "count*10^3/µL", "years", "Female (0) or Male (1)",
+    "N/A", "N/A", "hours", "hours", " For sepsis patients, SepsisLabel is 1 if t≥tsepsis−6 and 0 if t<tsepsis−6. For non-sepsis patients, SepsisLabel is 0."
+  )
+)
 
-Vital signs (columns 1-8)
-HR	                     Heart rate (beats per minute)
-O2Sat	                   Pulse oximetry (%)
-Temp	                   Temperature (Deg C)
-SBP	                     Systolic BP (mm Hg)
-MAP	                     Mean arterial pressure (mm Hg)
-DBP	                     Diastolic BP (mm Hg)
-Resp	                   Respiration rate (breaths per minute)
-EtCO2	                   End tidal carbon dioxide (mm Hg)
+knitr::kable(variable_table)
+```
 
-Laboratory values (columns 9-34)
-BaseExcess	             Measure of excess bicarbonate (mmol/L)
-HCO3	                   Bicarbonate (mmol/L)
-FiO2	                   Fraction of inspired oxygen (%)
-pH	                     N/A
-PaCO2	                   Partial pressure of carbon dioxide from arterial blood          (mm Hg)
-SaO2	                   Oxygen saturation from arterial blood (%)
-AST	                     Aspartate transaminase (IU/L)
-BUN	                     Blood urea nitrogen (mg/dL)
-Alkalinephos	           Alkaline phosphatase (IU/L)
-Calcium	                (mg/dL)
-Chloride	              (mmol/L)
-Creatinine	            (mg/dL)
-Bilirubin_direct	      Bilirubin direct (mg/dL)
-Glucose	                Serum glucose (mg/dL)
-Lactate	                Lactic acid (mg/dL)
-Magnesium	              (mmol/dL)
-Phosphate	              (mg/dL)
-Potassium	              (mmol/L)
-Bilirubin_total	        Total bilirubin (mg/dL)
-TroponinI	              Troponin I (ng/mL)
-Hct	                    Hematocrit (%)
-Hgb	                    Hemoglobin (g/dL)
-PTT	                    partial thromboplastin time (seconds)
-WBC	                    Leukocyte count (count*10^3/µL)
-Fibrinogen	            (mg/dL)
-Platelets	              (count*10^3/µL)
-Demographics            (columns 35-40)
-Age	                    Years (100 for patients 90 or above)
-Gender	                Female (0) or Male (1)
-Unit1	                  Administrative identifier for ICU unit (MICU)
-Unit2	                  Administrative identifier for ICU unit (SICU)
-HospAdmTime	            Hours between hospital admit and ICU admit
-ICULOS	                ICU length-of-stay (hours since ICU admit)
-
-Outcome (column 41)
-SepsisLabel	            For sepsis patients, SepsisLabel is 1 if t≥tsepsis−6 and 0 if t<tsepsis−6. For non-sepsis patients, SepsisLabel is 0.
-
-
+### Question 2
 
 **Q2. (2 marks)** Then choose **three variables** you hypothesise might be strong predictors of sepsis and write one sentence each explaining your reasoning.  There is no right or wrong answer to this, but you should think about your and problem before diving into the EDA and prediction!
 *(Hint: look up how sepsis is clinically diagnosed.)*  
@@ -181,6 +180,8 @@ cat("Training rows:", nrow(train), "\n", "\n")
 cat("Test rows:    ", nrow(test),  "\n")
 ```
 
+### Question 3
+
 **Q3. (1 mark)** What percentage of our dataset is being assigned to test?
 
 It is splitting it at 75% which means that 25% of the data will be used for the test set and 75% of the data will be used for the train set. I will double check it below:
@@ -199,6 +200,7 @@ Again, do your EDA on `train` only - we do not look at `test` until Section 6.
 
 ### 3.1 Class balance
 
+### Question 4
 
 **Q4. (2 marks).** Uncomment and complete the code below to check the class balance in the **training** set.
 `count()` tallies rows per group; add a `prop` column to show each class as a fraction of the total.
@@ -209,6 +211,7 @@ train |>
  mutate(prop = n / sum(n))
 ```
 
+### Question 5
 
 **Q5. (2 mark)** Using your solution to Q4, complete this plotting code to create a barplot of the relative sepsis label balance.  Change the colour of the sepsis bar to green.
 
@@ -233,6 +236,8 @@ train |>
  theme(legend.position = "none")
 ```
 
+### Question 6
+
 **Q6. (3 marks)**  Given the class imbalance, which of the following 2 metrics might be the most misleading and why? accuracy, precision, recall, F1-score, ROC-AUC, PR-AUC?
 
 !!!!!!!
@@ -256,6 +261,8 @@ train |>
        x = "Percent missing", y = NULL)
 ```
 
+### Question 7
+
 **Q7. (1 mark)**
 Modify the above to plot only missingness for Sepsis positive data
 ```{r missingness-sepsis-bar, fig.height = 5}
@@ -276,6 +283,8 @@ train |>
   labs(title = "Missing data by variable (training set) for only sepsis patients",
        x = "Percent missing", y = NULL)
 ```
+
+### Question 8
 
 **Q8. (3 marks)** Which three variables have the highest missingness? In an ICU context, why might a lab value be missing - is this likely to be random, or informative? Does this mean you should drop or impute these values?
 
@@ -310,6 +319,8 @@ train |>
   labs(x = NULL, y = "Density", fill = NULL,
        title = "Vital-sign distributions by sepsis status")
 ```
+
+### Question 9
 
 **Q9 (2 marks).** Modify the code above to plot the distribution of **three other lab variables** of your choice. 
 
@@ -422,6 +433,8 @@ tidy(pca_prep, id = "pca", type = "variance") |>
 
 The two classes overlap heavily in the PC1/PC2 projection — this is common in clinical data where no single linear combination cleanly separates cases.
 
+### Question 10
+
 **Q10 (2 marks).** What does this tell us about the potential decision boundary our predictive model would have to fit?  Which models easily support this type of boundary?
 
 !!!!!!!!
@@ -435,6 +448,8 @@ The two classes overlap heavily in the PC1/PC2 projection — this is common in 
 ## 4 Feature Engineering
 
 Let's create a few new features likely to be informative for sepsis:
+
+### Question 11
 
 **Q11. (1 mark)** Modify the following code to also add an additional feature called `shock_index` which is defined as heart rate divided by the systolic blood pressure. 
 
@@ -498,6 +513,8 @@ Now let's specify our 3 models:
 - XGBoost: gradient-boosted trees. Builds trees sequentially, each one correcting the residual errors of the previous ensemble. Typically the strongest tabular performer, but the most sensitive to model (hyper)parameters and easy to overfit without tuning.
 
 Each of these has several hyperparameters (parts of the model we don't directly learn from the data during fitting; instead we choose them before fitting and select the best values by cross-validation). Marking a hyperparameter with `tune()` is a placeholder that says "leave this blank for now — we'll fill it in during the tuning step." The values will later be chosen by tune_grid() based on cross-validated performance on the training folds.
+
+### Question 12
 
 **Q12 4 marks**: Using R's documentation (e.g., `?logistic_reg`) look up and briefly explain each of the hyperparamters we are tuning in cross-validation for each of the 3 models:s
 
@@ -589,6 +606,8 @@ autoplot(tuned, metric = "pr_auc", select_best = TRUE) +
   labs(title = "Best CV PR-AUC per model family")
 ```
 
+### Question 13
+
 **Q13 (2 marks).** Which model family achieves the highest CV PR-AUC?
 Is the gap between the best and worst model large relative to the standard errors?
 What does that suggest about model selection here?
@@ -607,6 +626,7 @@ rank_results(tuned, rank_metric = "pr_auc", select_best = TRUE) |>
   select(wflow_id, .metric, mean, std_err, rank)
 ```
 
+### Question 14
 
 **Q14 (3 marks).** By summarising and comparing the metrics output by this code, describe how each model performed relative to one another.
 
@@ -621,8 +641,6 @@ Logistic regression performed best overall, with the highest PR_AUC (0.761), hig
 ## 6 Test-Set Evaluation
 
 In the real-world we'd try to optimise these models further and/or try some different architectures but lets just take our best model and continue to test evaluation.
-
-
 
 ### 6.1 Finalise the best model
 
@@ -656,6 +674,8 @@ preds |>
 
 ### 6.3 Confusion matrix
 
+### Question 15
+
 **Q15 (1 marks).** How many times were true sepsis cases classified as non-sepsis in the test set? Is this more or less than the correct sepsis predictions?
 
 True sepsis cases were classified as non-sepsis cases 18 times in the test set, which was 7 more times than it correctly identified sepsis cases (11).
@@ -677,6 +697,8 @@ preds |>
 Now let's investigate whether the model work equally well/badly across patient groups?
 
 **Code deleted here due to not working**
+
+### Question 16
 
 **Q16 (2 marks).** Is there a subgroup where the model performs noticeably worse than the overall PR-AUC?
 Suggest one data-driven reason and one clinical reason that could explain the gap.
@@ -716,6 +738,8 @@ importance_tbl |>
        x = "Importance", y = NULL)
 ```
 
+### Question 17
+
 **Q17 (2 marks).** Compare the top 3 most important variables to the three predictors you identified in Q1.
 Do they match? Write one sentence about any variable that surprised you.
 
@@ -726,6 +750,8 @@ Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. T
 ---
 
 ## 8 Discussion
+
+### Question 18
 
 **Q18 (3 marks).** In 3–5 sentences, address both of the following:
 
