@@ -540,7 +540,7 @@ xgb_spec <- boost_tree(
 - **min_n**: The minimum number of data points in a node that are required for the node to be split further.
 
 
-!!!!!!!!!!!!!!!! more detail required re-write them
+!!!!!!!!!!!!!!!! more detail required re-write them !!!!!!!!!
 
 
 ### 5.4 Tune all three models
@@ -593,6 +593,14 @@ autoplot(tuned, metric = "pr_auc", select_best = TRUE) +
 Is the gap between the best and worst model large relative to the standard errors?
 What does that suggest about model selection here?
 
+The logistic regression model achieved the highest cross-validated PR-AUC (~0.76), follwed by the random forest model (~0.71), and XGBoost (~0.67).
+
+Although logistic regression has the highest average PR-AUC, the error bars overlap substantially across all three models. This indicates that the differences between the models are relatively small compared with the uncertainty in the estimates. Therefore, while logistic regression appears to be the best performing model, the results suggest that the model selection should be made with more caution, as the differences in true performance between the models may not be as different as they appear with just the PR_AUC score itself.
+
+
+!!!!!!!!!! edit this it is not good
+
+
 ```{r}
 rank_results(tuned, rank_metric = "pr_auc", select_best = TRUE) |>
   filter(.metric %in% c("pr_auc", "brier_class", "accuracy", "sensitivity", "specificity")) |>
@@ -600,14 +608,13 @@ rank_results(tuned, rank_metric = "pr_auc", select_best = TRUE) |>
 ```
 
 
-!!!!!!!!!!!!!!!
-
-
-
 **Q14 (3 marks).** By summarising and comparing the metrics output by this code, describe how each model performed relative to one another.
 
 
-!!!!!!!!!!!!!!!
+Logistic regression performed best overall, with the highest PR_AUC (0.761), highest accuracy (0.981), highest sensitivity (0.417), and lowest Brier score (0.0146). Random forest had the highest specificity (1.000), meaning it produced the fewest false positives, but it had lower PR_AUC and sensitivity than the logistic regression. XGBoost generally performed between the other two models for sensitivity and Brier score but had the lowest PR-AUC and accuracy. All theree models had very high specificty (>0.997) but relatively low sensitivity (<0.42), indicating that they were all better at identifying non-septic patients correctly than identifying sepsis cases correctly. Overall, the differences between models were relatively modest, and the standard error suggest that there is substantial overlap in performance. The logistic regression appears to be the strongest model, but the results do not indicate that there is a strong advantage in its performance over the other models.
+
+
+!!!!!!!!!!!!!!!  **fix this**
 
 ---
 
@@ -651,6 +658,8 @@ preds |>
 
 **Q15 (1 marks).** How many times were true sepsis cases classified as non-sepsis in the test set? Is this more or less than the correct sepsis predictions?
 
+True sepsis cases were classified as non-sepsis cases 18 times in the test set, which was 7 more times than it correctly identified sepsis cases (11).
+
 ```{r conf-matrix}
 preds |>
   conf_mat(truth = SepsisLabel, estimate = .pred_class) |>
@@ -658,9 +667,6 @@ preds |>
   scale_fill_gradient(low = "white", high = "firebrick") +
   labs(title = "Confusion matrix (threshold = 0.5)")
 ```
-
-
-!!!!!!!!!!!!!!!
 
 ---
 
@@ -672,12 +678,17 @@ Now let's investigate whether the model work equally well/badly across patient g
 
 **Code deleted here due to not working**
 
-
-**Q15 (2 marks).** Is there a subgroup where the model performs noticeably worse than the overall PR-AUC?
+**Q16 (2 marks).** Is there a subgroup where the model performs noticeably worse than the overall PR-AUC?
 Suggest one data-driven reason and one clinical reason that could explain the gap.
 
+Yes. All reported subgroups have PR-AUC values that are substaintially lower than the overall test PR-AUC indicating that model performance is worse within the indiviual subgroups. Among the grous with reported values, the male subgroup (Sex = 1) has the lowest PR-AUC (approximately 0.07). Additionally, the 80+ age group does not appear to have a reported PR-AUC (or if it does it is very low), which may indicate insuffieicent data or too few positive cases to estimate its performance reliably.
 
-!!!!!!!!!!!!!!!
+A data-drive reason for the gap is that some subgroups may have small sample sizes or very few positive cases. Because the sepsis cases are rare, the model may struggle to identify positive cases consistency within smaller subgroups and can lead to lower subgroup PR-AUC values.
+
+A clinical reason is that sepsis presents differently across age and sex groups and variations in their symptoms, co-morbidites, or healthcare utilization could change how the model performs.
+
+
+!!!!!!!!!!!!!!! **this is very bad**
 
 ### 7.2 Variable importance
 
@@ -705,8 +716,11 @@ importance_tbl |>
        x = "Importance", y = NULL)
 ```
 
-**Q16 (2 marks).** Compare the top 3 most important variables to the three predictors you identified in Q1.
+**Q17 (2 marks).** Compare the top 3 most important variables to the three predictors you identified in Q1.
 Do they match? Write one sentence about any variable that surprised you.
+
+The top 3 most important variables were lactate, MAP (mean arterial pressure), and WBC (Leukocyte count), these were very different from the three that I identified in Q1 (Resp, SBP, Temp). Resp and SBP both had an importance score of 0, and Temp had an importance score of (<0.1), whereas the top 3 most important variables had scores of approximately 1.5 (lactate), 0.8 (MAP), and 0.4 (WBC).
+
 
 
 !!!!!!!!!!!!!!!
@@ -715,10 +729,14 @@ Do they match? Write one sentence about any variable that surprised you.
 
 ## 8 Discussion
 
-**Q17 (3 marks).** In 3–5 sentences, address both of the following:
+**Q18 (3 marks).** In 3–5 sentences, address both of the following:
 
 - What is the single biggest limitation of this analysis (consider the label definition, the static sampling approach, generalisability to other hospitals, etc.)?
 - Would you recommend deploying a model trained this way in a real ICU? If yes, under what monitoring conditions? If no, what would need to change first?
+
+
+
+
 
 
 !!!!!!!!!!!!!!!
