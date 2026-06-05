@@ -234,11 +234,9 @@ train |>
 
 **Q6. (3 marks)**  Given the class imbalance, which of the following 2 metrics might be the most misleading and why? accuracy, precision, recall, F1-score, ROC-AUC, PR-AUC?
 
-!!!!!!!
+Accuracy and ROC-AUC are the two most misleading metrics given the class imbalance. Accuracy is misleading because sepsis is so rare in the dataset that if it just predicted "No Sepsis" for every patient it would still get 96.8% accuracy without actually identifying a single sepsis case. ROC-AUC can also be misleading because it accounts for true negatives in the denominator, and there are so many non-sepsis patients that the model can still look like its performing well overall even if it's actually doing a poor job of identifying the sepsis cases.
 
-Accuracy and ROC-AUC are the two most misleading metrics. Accuracy can be misleading because sepsis is rare in the dataset. A model could predict almost every patient as "No Sepsis" and still get a very high accuracy score, even though it would miss many of the patients who actually have sepsis. ROC-AUC can also be misleading because it is heavily influenced by the large number of non-sepsis patients. This can make a model appear to perform well overall, even if it is not very good at identifying septic patients. PR-AUC is better for this model because it focuses on how well the model can predict the rare sepsis cases.
-
-Precision, recall, and the F1-score would be less misleading because they focus directly on the model's ability to identify sepsis cases, which are the *minority class* and the primary outcome of interest.
+PR-AUC would be more appropriate than the ROC-AUC in this case because it focuses specifically on how well the model can identify the rare positive class.
 
 ### 3.2 Missingness
 
