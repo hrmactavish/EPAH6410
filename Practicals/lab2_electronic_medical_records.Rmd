@@ -123,8 +123,6 @@ cat("Top 5 most common specialties: ")
 head(specialty_counts, 5)
 
 
-
-
 # bar plot of the transcripts from each specialty
 ggplot(specialty_counts,
        aes(x = reorder(medical_specialty, n),
@@ -239,9 +237,41 @@ Regex builders like [this website](https://spannbaueradam.shinyapps.io/r_regex_t
 
 ```{r q2}
 # Your code here
+temp_pattern <- "((\\btemperature\\b|\\btemp\\b)\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)|(\\bafebrile\\b)|(\\b\\d{2,3}\\.?\\d*\\s*°?\\s*[fFcC]\\b)|(\\bT\\b\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)"
 
+# for temperature of: ((temperature|temp)\\s+of\\s+\\d{2,3}\\.?\\d*)
+
+# for afebrile: (afebrile) 
+# ? what about febrile
+
+# for the number temps: (\\d{2,3}\\.?\\d*\\s*°?\\s*[fFcC])
+
+
+
+# "((temperature|temp)\\s+of\\s+\\d{2,3}\\.?\\d*)|(afebrile)|(\\b\\d{2,3}\\.?\\d*\\s*°?\\s*[fFcC]\\b)|(\\bT\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)"
+
+temp_measurements <- filtered_data %>%
+  mutate(
+    has_temp = str_detect(
+      transcription,
+      regex(temp_pattern, ignore_case = TRUE)
+    )
+  ) %>%
+  group_by(medical_specialty, has_temp) %>%
+  summarise(n = n(), .groups = "drop")
+
+temp_measurements
 ```
 
+```{r}
+filtered_data %>%
+  mutate(temp_match = str_extract(transcription, regex(temp_pattern, ignore_case = TRUE))) %>%
+  filter(!is.na(temp_match)) %>%
+  select(medical_specialty, temp_match) 
+```
+
+
+!!!!!!!!!!
 ---
 
 ## Text Normalisation
