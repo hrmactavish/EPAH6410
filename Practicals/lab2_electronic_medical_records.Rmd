@@ -2,7 +2,11 @@
 title: "Practical 2: Electronic Medical Records and NLP"
 author: "Heather MacTavish"
 date: "2026-06-04"
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 4
 ---
 
 ```{r setup, include=FALSE}
@@ -63,9 +67,34 @@ glimpse(raw_data)
 
 I've not supplied a data dictionary with this dataset. This is a VERY common situation with real EMR data.
 
+### Question 1
+
+#### A
+
 **Q1a (2 marks):** Based on the `glimpse()` output create a simple data dictionary (variable name with a 1-2 sentence explanation of the variable).
 
+```{r}
+variable_table <- data.frame(
+  Variable = c("note_id", "description", 
+               "medical_specialty", "sample_name", 
+               "transcription", "keywords"),
+  Description = c("The unique identifier for each note.",
+                  "A description of the chief concern.",
+                  "The medical specialty of the note.",
+                  "The name of the note from mtsamples.com.", 
+                  "The transcription of note text.",
+                  "Keywords related to the note.")
+)
+
+knitr::kable(variable_table)
+```
+
+#### B
+
 **Q1b (2 marks):** What sort of information are you missing about how this dataset was created that could be important to your analyses?
+
+
+#### C
 
 **Q1c (2 marks):** How many distinct medical specialties are represented?  What are the most common 5? Create a ggplot bar graph showing how many transcripts come from each specialty.  
 
@@ -163,6 +192,8 @@ filtered_data |>
               median_doses = median(n_doses))
 ```
 
+### Question 2
+
 **Q2 (3 marks):** Write a regular expression to find temperature measurements
 in clinical text (e.g., "98.6 F", "37.2°C", "temperature of 38.1", "afebrile").
 Report how many notes in each specialty contain at least one temperature mention. 
@@ -197,10 +228,14 @@ tokenised_data <- filtered_data |>
 glimpse(tokenised_data)
 ```
 
+### Question 3
+
 **Q3 (2 marks):** How many stop words are in the `stop_words` list, how many different `lexicon` are included, and which `lexicon` contains the most stop words? Answer these questions using code below and create a bargraph of the number of unique stop words per lexicon.
 
 ```{r stop-word-lexicons}
 ```
+
+### Question 4
 
 **Q4 (2 marks):** How many *unique* unigrams (distinct words) are there in total across all the
 cleaned and tokenised transcriptions for each specialty? Which specialty has the largest
@@ -246,6 +281,8 @@ bigrams |>
   arrange(medical_specialty)
 ```
 
+### Question 5
+
 **Q5 (1 mark):** What is the most common bigram in each specialty?
 
 ```{r bigram_totals}
@@ -268,6 +305,8 @@ sentences_data |>
             n_notes          = n_distinct(note_id),
             mean_per_note    = round(total_sentences / n_notes, 1))
 ```
+
+### Question 6
 
 **Q6 (1 mark):** How many *unique* sentences are there in each specialty?
 Uncomment and complete the code below (replace each `___` with the correct column name):
@@ -299,12 +338,15 @@ word_sample |>
   slice_head(n = 15)
 ```
 
+### Question 7
+
 **Q7 (1 mark):**  Does lemmatising or stemming result in fewer unique words?
 
 ```{r stemming_v_lemmatising}
 
 ```
 
+### Question 8
 
 **Q8 (2 marks):** In 2-3 sentences explain why a general-purpose English
 lemmatizer is likely to perform poorly on medical transcription text. Give at
@@ -364,6 +406,8 @@ specialty_tfidf |>
        x = "TF-IDF", y = NULL)
 ```
 
+### Question 9
+
 **Q9 (2 marks):** Do the top TF-IDF terms make clinical sense for each specialty?
 Identify one term that surprises you from any specialty. Complete the code below by replacing
 `"your_term_here"` with that term to pull an example transcription containing
@@ -414,6 +458,8 @@ ggplot(specialty_props |> filter(proportion > 0, Orthopedic > 0),
   labs(y = "Orthopedic", x = "Comparison specialty",
        title = "Lemma proportions: Orthopedic vs. Radiology and Neurology")
 ```
+
+### Question 10
 
 **Q10 (2 marks):** What does this plot tell you about the lexical similarity
 between Orthopedic and Neurology compared with Orthopedic and Radiology? Is
@@ -505,6 +551,8 @@ lda_beta |>
        x = "β  (word–topic probability)", y = NULL)
 ```
 
+### Question 11
+
 **Q11 (2 marks):** Based on the top words in the β plot, give each topic a brief
 descriptive clinical label (e.g., "imaging", "musculoskeletal", "neurological").
 Which topic do you think corresponds most closely to which specialty, and why?
@@ -540,6 +588,8 @@ lda_gamma_specialty |>
   labs(title = "Mean topic proportion by specialty (γ)",
        x = NULL, y = "Mean γ", fill = "Specialty")
 ```
+
+### Question 12
 
 **Q12 (3 marks):**
 
@@ -603,6 +653,8 @@ lda_gamma_specialty |>
   arrange(desc(gamma))
 ```
 
+### Question 13
+
 **Q13 (3 marks):** Copy the transcription above into Microsoft Copilot and use
 the following prompt:
 
@@ -624,11 +676,15 @@ of new clinical notes, and why?
 
 ## Tying back to the literature
 
+### Question 14
+
 **Q14 (1 mark):** Sun et al. (2024) applied LDA topic modelling
 to clinical social work notes to explore SDoH factors. Name two of the
 SDoH-related topics they identified and state the name of the metric they used
 to evaluate topic quality (hint: it measures the coherence of the top words
 within a topic).
+
+### Question 15
 
 **Q15 (1 mark):** Chung et al. (2024) tested GPT-4 Turbo on both
 classification and numerical prediction tasks. Name one task where the LLM
