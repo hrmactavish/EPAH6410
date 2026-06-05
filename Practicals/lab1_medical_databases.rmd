@@ -129,7 +129,9 @@ I hypothesize that temperature will be a strong predictor of sepsis because feve
 
 
 Citation for how sepsis is clinically diagnosed:
+
 Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, Bellomo R, Bernard GR, Chiche JD, Coopersmith CM, Hotchkiss RS, Levy MM, Marshall JC, Martin GS, Opal SM, Rubenfeld GD, van der Poll T, Vincent JL, Angus DC. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801-10. doi: 10.1001/jama.2016.0287. PMID: 26903338; PMCID: PMC4968574.
+
 ---
 
 ## 2 Data Loading and Splitting
@@ -285,9 +287,9 @@ The three variables with the highest missingness are:
 2. Fibrinogen
 3. Bilirubin_direct
 
-In an ICU context, missing lab values are likely not random and are usually informative, because clinicians only order certain tests when they suspect a specific condition because labs take time and are a waste of resources if ordered when not required. This means that missingness can reflect clinical decision-making instead of a data collection failure.
+In an ICU context, missing lab values are likely not random and are usually informative, because clinicians only order certain tests when they suspect a specific condition. Labs take time and are a waste of resources if ordered when not required. This means that missingness can reflect clinical decision-making instead of a data collection failure.
 
-Because the missingness is informative and not random, imputing these values could introduce bias by treating a missing result as if it were a normal measured value. A better approach would be to add missingness indicator columns so that the model can learn from which values are absent. For example, if you were looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect (Groenwold, 2020).
+Because the missingness is informative and not random, imputing these values could introduce bias by treating a missing result as if it were a normal measured value. A better approach would be to add missingness indicator columns so that the model can learn from which values are absent. For example, if you were looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect (Groenwold, 2020). Therefore, the model would know that that person is likely at less risk of developing a condition than another person who the test was run for.
 
 Groenwold RHH. Informative missingness in electronic health record systems: the curse of knowing. Diagn Progn Res. 2020 Jul 2;4:8. doi: 10.1186/s41512-020-00077-0. PMID: 32699824; PMCID: PMC7371469.
 
@@ -522,28 +524,32 @@ xgb_spec <- boost_tree(
   set_mode("classification")
 ```
 
-*Logistic Regression*
-- **penalty**: Controls the strength of regularization. Larger values result in stronger regularization and a simpler model with less chance of overfitting. Lower values allow more complex models.
+**Logistic Regression**:
 
-- **mixture**: A number between 0 and 1 giving the proportion of L1 (lasso) regularisation. A value of 1 gives a pure lasso model which can reduce some coefficients to exactly zero which removes the predictors. A value of 0 gives pure ridge regression which reduces all coefficients but keeps them all in the model. Values in between give an elastic net that blends both approaches which can result in some coefficients being equal to zero and others close to zero.
+- *penalty*: Controls the strength of regularization. Larger values result in stronger regularization and a simpler model with less chance of overfitting. Lower values allow more complex models.
+- *mixture*: A number between 0 and 1 giving the proportion of L1 (lasso) regularisation. A value of 1 gives a pure lasso model which can reduce some coefficients to exactly zero which removes the predictors. A value of 0 gives pure ridge regression which reduces all coefficients but keeps them all in the model. Values in between give an elastic net that blends both approaches which can result in some coefficients being equal to zero and others close to zero.
 
 Had to Google what they did because the documentation did not help: 
+
 DICEE. (2023, January 5). Logistic Regression and regularization: Avoiding overfitting and improving generalization. Medium. https://medium.com/@dicee/logistic-regression-and-regularization-avoiding-overfitting-and-improving-generalization-e9afdcddd09d
 
 
 
-*Random Forest*:
-- **min_n**: The minimum number of data points in a node that are required for the node to be split further. Larger values produce simpler trees that are less likely to overfit and smaller values allow more splits which result in deeper trees that may overfit.
+**Random Forest**:
+
+- *min_n*: The minimum number of data points in a node that are required for the node to be split further. Larger values produce simpler trees that are less likely to overfit and smaller values allow more splits which result in deeper trees that may overfit.
 
 More help from an article online: 
+
 Part 6: Random Forest Hyperparameters & Tuning Strategies. (2025, March 23). Baekho Lab. https://baekholab.com/2025/03/22/part-6-random-forest-hyperparameters-tuning-strategies/
 
-*XGBoost*:
-- **tree_depth**: The maximum depth of each decision tree. Controls how many splits can occur. Deeper treees can model more complex patterns but have a higher chance of overfitting.
-- **learn_rate**: Controls how much each new tree contributes to the model. Smaller values make the model more robust.
-- **loss_reduction**: The minimum reduction in the loss function required before an additional split is made. 
-- **sample_size**: The proportion of training observations randomly sampled for each boosting iteration. 
-- **min_n**: The minimum number of data points in a node that are required for the node to be split further.
+**XGBoost**:
+
+- *tree_depth*: The maximum depth of each decision tree. Controls how many splits can occur. Deeper treees can model more complex patterns but have a higher chance of overfitting.
+- *learn_rate*: Controls how much each new tree contributes to the model. Smaller values make the model more robust.
+- *loss_reduction*: The minimum reduction in the loss function required before an additional split is made. 
+- *sample_size*: The proportion of training observations randomly sampled for each boosting iteration. 
+- *min_n*: The minimum number of data points in a node that are required for the node to be split further.
 
 Sakib, S. N. (2025). Understanding XGBoost Parameters in Depth. Kaggle. https://www.kaggle.com/discussions/general/574724
 
@@ -600,7 +606,7 @@ autoplot(tuned, metric = "pr_auc", select_best = TRUE) +
 Is the gap between the best and worst model large relative to the standard errors?
 What does that suggest about model selection here?
 
-Looking at the plot, the logistic regression ranked first with a PR-AUC of ~0.76, random forest second at ~0.71, and XGBoost last at ~0.67. However, their confidence intervals are very wide and overlap substantially; random forest's interval runs from approximately 0.60 to 0.83, and XGBoost's from approximately 0.56 to 0.77. This means that the gap between the models is small relative to the uncertainty, so we cannot be confident that logistic regression is actually the best model. The ranking could easily change it the data is randomly split a different way.
+Looking at the plot, the logistic regression ranked first with a PR-AUC of ~0.76, random forest second at ~0.71, and XGBoost last at ~0.67. However, their confidence intervals are very wide and overlap substantially; random forest's interval runs from approximately 0.59 to 0.83, and XGBoost's from approximately 0.56 to 0.77. This means that the gap between the models is small relative to the uncertainty, so we cannot be confident that logistic regression is actually the best model. The ranking could easily change it the data is randomly split a different way.
 
 ```{r}
 rank_results(tuned, rank_metric = "pr_auc", select_best = TRUE) |>
@@ -612,7 +618,7 @@ rank_results(tuned, rank_metric = "pr_auc", select_best = TRUE) |>
 
 **Q14 (3 marks).** By summarising and comparing the metrics output by this code, describe how each model performed relative to one another.
 
-Logistic regression performed the best overall, with the highest PR_AUC (0.761), highest accuracy (0.981), highest sensitivity (0.417), and lowest Brier score (0.0146). Random forest had the highest specificity of all three models at a perfect 1.000, meaning it produced no false positives at the default threshold, but its sensitivity (0.382) and PR-AUC (0.709) were slightly lower than the logistic regression. XGBoost was ranked third on PR-AUC (0.668) and accuracy (0.978), but had a sensitivity (0.400) slightly higher than the random forest. All three models had very high specificity (> 0.997) but low sensitivity (< 0.42), which reflects the class imbalance; predicting "No Sepsis" almost all the time will almost always be correct when sepsis only makes up approximately 3% of cases. The standard errors are large enough that the differences between the models are not conclusive, and all three would need to have different thresholds to actually be clinically useful to correctly identify sepsis cases.
+Logistic regression performed the best overall, with the highest PR_AUC (0.761), highest accuracy (0.981), highest sensitivity (0.417), and lowest Brier score (0.0146). Random forest had the highest specificity of all three models at a perfect 1.000, meaning it produced no false positives at the default threshold, but its sensitivity (0.382) and PR-AUC (0.709) were slightly lower than the logistic regression. XGBoost was ranked third on PR-AUC (0.668) and accuracy (0.978), but had a sensitivity (0.400) slightly higher than the random forest. All three models had very high specificity (> 0.997) but low sensitivity (< 0.42), which reflects the class imbalance; predicting "No Sepsis" almost all the time will almost always be correct when sepsis only makes up approximately 3% of cases. The standard errors are large enough that the differences between the models are not conclusive, and all three would need to have different thresholds to actually be clinically useful in correctly identifying sepsis cases.
 
 ---
 
@@ -685,7 +691,7 @@ Looking at the subgroup PR-AUC plot, all subgroups performed far worse than the 
 
 A data-drive reason for this is that splitting the already small test set into subgroups leaves very few positive sepsis cases in each group, possibly none in certain groups, making the PR-AUC estimates impossible to calculate.
 
-A clinical reason is that sepsis can present very differently across age and sex groups. For example, elderly patients are known to have a differnt sepsis path than younger or mild-aged adults (*Alhamyani et al., 2024*). As the model is trained on the full population, it may have not learned the sepsis patterns that are specific to each subgroup well enough to reliably identify cases within them.
+A clinical reason is that sepsis can present very differently across age and sex groups. For example, elderly patients are known to have a differnt sepsis path than younger or mild-aged adults (Alhamyani et al., 2024). As the model is trained on the full population, it may have not learned the sepsis patterns that are specific to each subgroup well enough to reliably identify cases within them.
 
 Alhamyani AH, Alamri MS, Aljuaid NW, Aloubthani AH, Alzahrani S, Alghamdi AA, Lajdam AS, Alamoudi H, Alamoudi AA, Albulushi AM, AlQarni SN. Sepsis in Aging Populations: A Review of Risk Factors, Diagnosis, and Management. Cureus. 2024 Dec 2;16(12):e74973. doi:  10.7759/cureus.74973. PMID: 39744263; PMCID: PMC11691596.
 
