@@ -129,8 +129,7 @@ I hypothesize that temperature will be a strong predictor of sepsis because feve
 
 
 Citation for how sepsis is clinically diagnosed:
-Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801–10. doi:[10.1001/jama.2016.0287](https://jamanetwork.com/journals/jama/fullarticle/2492881)
-
+Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, Bellomo R, Bernard GR, Chiche JD, Coopersmith CM, Hotchkiss RS, Levy MM, Marshall JC, Martin GS, Opal SM, Rubenfeld GD, van der Poll T, Vincent JL, Angus DC. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801-10. doi: 10.1001/jama.2016.0287. PMID: 26903338; PMCID: PMC4968574.
 ---
 
 ## 2 Data Loading and Splitting
@@ -290,7 +289,7 @@ In an ICU context, missing lab values are likely not random and are usually info
 
 Because the missingness is informative and not random, imputing these values could introduce bias by treating a missing result as if it were a normal measured value. A better approach would be to add missingness indicator columns so that the model can learn from which values are absent. For example, if you were looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect (Groenwold, 2020).
 
-Groenwold RHH. Informative missingness in electronic health record systems: the curse of knowing. Diagn Progn Res. 2020 Jul 2;4:8. doi: [10.1186/s41512-020-00077-0](https://doi.org/10.1186/s41512-020-00077-0). PMID: 32699824; PMCID: PMC7371469.
+Groenwold RHH. Informative missingness in electronic health record systems: the curse of knowing. Diagn Progn Res. 2020 Jul 2;4:8. doi: 10.1186/s41512-020-00077-0. PMID: 32699824; PMCID: PMC7371469.
 
 ### 3.3 Vital-sign distributions by outcome
 
@@ -429,7 +428,6 @@ The two classes overlap heavily in the PC1/PC2 projection — this is common in 
 
 The heavy overlap between sepsis and non-sepsis cases in the PCA plot suggests that the two groups cannot be easily separated using a simple linear boundary. This indicates that the relationship between the predictors and sepsis is likely non-linear and more complex. Models such as random forests may be better at capturing these patterns because they use multiple decision trees rather than relying on a single linear combination of predictors.
 
-
 ---
 
 ## 4 Feature Engineering
@@ -503,7 +501,7 @@ Each of these has several hyperparameters (parts of the model we don't directly 
 
 ### Question 12
 
-**Q12 4 marks**: Using R's documentation (e.g., `?logistic_reg`) look up and briefly explain each of the hyperparamters we are tuning in cross-validation for each of the 3 models:s
+**Q12 4 marks**: Using R's documentation (e.g., `?logistic_reg`) look up and briefly explain each of the hyperparamters we are tuning in cross-validation for each of the 3 models:
 
 ```{r model-spec}
 glm_spec <- logistic_reg(penalty = tune(), mixture = tune()) |>
@@ -524,27 +522,30 @@ xgb_spec <- boost_tree(
   set_mode("classification")
 ```
 
-
-
-!!!!!! 
-
 *Logistic Regression*
-- **penalty**: Controls the strength of regularization. *Larger values shrink coefficients more strongly.*
+- **penalty**: Controls the strength of regularization. Larger values result in stronger regularization and a simpler model with less chance of overfitting. Lower values allow more complex models.
 
-- **mixture**: Controls the type of regularization used. A value of 0 corresponds to ridge regression (L2 penalty), 1 corresponds to lasso regression (L1 penalty), and values between 0 and 1 produce elastic net regularization.
+- **mixture**: A number between 0 and 1 giving the proportion of L1 (lasso) regularisation. A value of 1 gives a pure lasso model which can reduce some coefficients to exactly zero which removes the predictors. A value of 0 gives pure ridge regression which reduces all coefficients but keeps them all in the model. Values in between give an elastic net that blends both approaches which can result in some coefficients being equal to zero and others close to zero.
+
+Had to Google what they did because the documentation did not help: 
+DICEE. (2023, January 5). Logistic Regression and regularization: Avoiding overfitting and improving generalization. Medium. https://medium.com/@dicee/logistic-regression-and-regularization-avoiding-overfitting-and-improving-generalization-e9afdcddd09d
+
+
 
 *Random Forest*:
-- **min_n**: The minimum number of data points in a node that are required for the node to be split further.
+- **min_n**: The minimum number of data points in a node that are required for the node to be split further. Larger values produce simpler trees that are less likely to overfit and smaller values allow more splits which result in deeper trees that may overfit.
+
+More help from an article online: 
+Part 6: Random Forest Hyperparameters & Tuning Strategies. (2025, March 23). Baekho Lab. https://baekholab.com/2025/03/22/part-6-random-forest-hyperparameters-tuning-strategies/
 
 *XGBoost*:
-- **tree_depth**: The maximum depth of each decision tree.
-- **learn_rate**: Controls how much each new tree contributes to the model and how much it corrects the errors of previous trees.
-- **loss_reduction**: The minimum reduction in the loss function required before an additional split is made. Larger values make the model more conservative by preventing unnecessary splits.
-- **sample_size**: The proportion of training observations randomly sampled for each boosting iteration. Sampling can reduce overfitting and improve model robustness.
+- **tree_depth**: The maximum depth of each decision tree. Controls how many splits can occur. Deeper treees can model more complex patterns but have a higher chance of overfitting.
+- **learn_rate**: Controls how much each new tree contributes to the model. Smaller values make the model more robust.
+- **loss_reduction**: The minimum reduction in the loss function required before an additional split is made. 
+- **sample_size**: The proportion of training observations randomly sampled for each boosting iteration. 
 - **min_n**: The minimum number of data points in a node that are required for the node to be split further.
 
-
-!!!!!!!!!!!!!!!! more detail required re-write them !!!!!!!!!
+Sakib, S. N. (2025). Understanding XGBoost Parameters in Depth. Kaggle. https://www.kaggle.com/discussions/general/574724
 
 
 ### 5.4 Tune all three models
@@ -686,9 +687,7 @@ A data-drive reason for this is that splitting the already small test set into s
 
 A clinical reason is that sepsis can present very differently across age and sex groups. For example, elderly patients are known to have a differnt sepsis path than younger or mild-aged adults (*Alhamyani et al., 2024*). As the model is trained on the full population, it may have not learned the sepsis patterns that are specific to each subgroup well enough to reliably identify cases within them.
 
-Alhamyani AH, Alamri MS, Aljuaid NW, Aloubthani AH, Alzahrani S, Alghamdi AA, Lajdam AS, Alamoudi H, Alamoudi AA, Albulushi AM, AlQarni SN. Sepsis in Aging Populations: A Review of Risk Factors, Diagnosis, and Management. Cureus. 2024 Dec 2;16(12):e74973. doi:  (10.7759/cureus.74973)[https://pubmed.ncbi.nlm.nih.gov/39744263/]. PMID: 39744263; PMCID: PMC11691596.
-
-!!!!!!!!!!!!!!! **fix citation**
+Alhamyani AH, Alamri MS, Aljuaid NW, Aloubthani AH, Alzahrani S, Alghamdi AA, Lajdam AS, Alamoudi H, Alamoudi AA, Albulushi AM, AlQarni SN. Sepsis in Aging Populations: A Review of Risk Factors, Diagnosis, and Management. Cureus. 2024 Dec 2;16(12):e74973. doi:  10.7759/cureus.74973. PMID: 39744263; PMCID: PMC11691596.
 
 ### 7.2 Variable importance
 
@@ -721,9 +720,9 @@ importance_tbl |>
 **Q17 (2 marks).** Compare the top 3 most important variables to the three predictors you identified in Q1.
 Do they match? Write one sentence about any variable that surprised you.
 
-The top three most important variables were lactate, MAP, and WBC, which did not match my Q2 predictions of Resp, SBP, and Temp. This makes sense looking back, as elevated lactate is one of the key indicators of septic shock in Sepsis-3 *(Singer et al., 2016)*, MAP looks at the entire state of circulation better than SBP alone, and high WBC is known as a classic sign of infection that would be present in sepsis cases as well. Resp and Temp had what appears to be xero importance, likely because they are elevated in many common ICU conditions and would not be specific to just sepsis. I was the most surprised that the respiratory rate had no importance, since it is used in both the SIRS  and qSOFA criteria.
+The top three most important variables were lactate, MAP, and WBC, which did not match my Q2 predictions of Resp, SBP, and Temp. This makes sense looking back, as elevated lactate is one of the key indicators of septic shock in Sepsis-3 (Singer et al., 2016), MAP looks at the entire state of circulation better than SBP alone, and high WBC is known as a classic sign of infection that would be present in sepsis cases as well. Resp and Temp had what appears to be xero importance, likely because they are elevated in many common ICU conditions and would not be specific to just sepsis. I was the most surprised that the respiratory rate had no importance, since it is used in both the SIRS  and qSOFA criteria.
 
-Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801–10. doi:[10.1001/jama.2016.0287](https://jamanetwork.com/journals/jama/fullarticle/2492881)
+Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. The Third International Consensus Definitions for Sepsis and Septic Shock (Sepsis-3). JAMA. 2016 Feb 23;315(8):801–10. doi:10.1001/jama.2016.0287
 
 ---
 
