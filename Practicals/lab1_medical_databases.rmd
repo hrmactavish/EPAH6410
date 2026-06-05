@@ -612,13 +612,7 @@ autoplot(tuned, metric = "pr_auc", select_best = TRUE) +
 Is the gap between the best and worst model large relative to the standard errors?
 What does that suggest about model selection here?
 
-The logistic regression model achieved the highest cross-validated PR-AUC (~0.76), follwed by the random forest model (~0.71), and XGBoost (~0.67).
-
-Although logistic regression has the highest average PR-AUC, the error bars overlap substantially across all three models. This indicates that the differences between the models are relatively small compared with the uncertainty in the estimates. Therefore, while logistic regression appears to be the best performing model, the results suggest that the model selection should be made with more caution, as the differences in true performance between the models may not be as different as they appear with just the PR_AUC score itself.
-
-
-!!!!!!!!!! edit this it is not good
-
+Looking at the plot, the logistic regression ranked first with a PR-AUC of ~0.76, random forest second at ~0.71, and XGBoost last at ~0.67. However, their confidence intervals are very wide and overlap substantially; random forest's interval runs from approximately 0.60 to 0.83, and XGBoost's from approximately 0.56 to 0.77. This means that the gap between the models is small relative to the uncertainty, so we cannot be confident that logistic regression is actually the best model. The ranking could easily change it the data is randomly split a different way.
 
 ```{r}
 rank_results(tuned, rank_metric = "pr_auc", select_best = TRUE) |>
@@ -630,11 +624,7 @@ rank_results(tuned, rank_metric = "pr_auc", select_best = TRUE) |>
 
 **Q14 (3 marks).** By summarising and comparing the metrics output by this code, describe how each model performed relative to one another.
 
-
-Logistic regression performed best overall, with the highest PR_AUC (0.761), highest accuracy (0.981), highest sensitivity (0.417), and lowest Brier score (0.0146). Random forest had the highest specificity (1.000), meaning it produced the fewest false positives, but it had lower PR_AUC and sensitivity than the logistic regression. XGBoost generally performed between the other two models for sensitivity and Brier score but had the lowest PR-AUC and accuracy. All theree models had very high specificty (>0.997) but relatively low sensitivity (<0.42), indicating that they were all better at identifying non-septic patients correctly than identifying sepsis cases correctly. Overall, the differences between models were relatively modest, and the standard error suggest that there is substantial overlap in performance. The logistic regression appears to be the strongest model, but the results do not indicate that there is a strong advantage in its performance over the other models.
-
-
-!!!!!!!!!!!!!!!  **fix this**
+Logistic regression performed the best overall, with the highest PR_AUC (0.761), highest accuracy (0.981), highest sensitivity (0.417), and lowest Brier score (0.0146). Random forest had the highest specificity of all three models at a perfect 1.000, meaning it produced no false positives at the default threshold, but its sensitivity (0.382) and PR-AUC (0.709) were slightly lower than the logistic regression. XGBoost was ranked third on PR-AUC (0.668) and accuracy (0.978), but had a sensitivity (0.400) slightly higher than the random forest. All three models had very high specificity (> 0.997) but low sensitivity (< 0.42), which reflects the class imbalance; predicting "No Sepsis" almost all the time will almost always be correct when sepsis only makes up approximately 3% of cases. The standard errors are large enough that the differences between the models are not conclusive, and all three would need to have different thresholds to actually be clinically useful to correctly identify sepsis cases.
 
 ---
 
@@ -702,6 +692,8 @@ Now let's investigate whether the model work equally well/badly across patient g
 
 **Q16 (2 marks).** Is there a subgroup where the model performs noticeably worse than the overall PR-AUC?
 Suggest one data-driven reason and one clinical reason that could explain the gap.
+
+
 
 Yes. All reported subgroups have PR-AUC values that are substaintially lower than the overall test PR-AUC indicating that model performance is worse within the indiviual subgroups. Among the grous with reported values, the male subgroup (Sex = 1) has the lowest PR-AUC (approximately 0.07). Additionally, the 80+ age group does not appear to have a reported PR-AUC (or if it does it is very low), which may indicate insuffieicent data or too few positive cases to estimate its performance reliably.
 
