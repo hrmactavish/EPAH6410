@@ -427,7 +427,8 @@ The two classes overlap heavily in the PC1/PC2 projection — this is common in 
 
 **Q10 (2 marks).** What does this tell us about the potential decision boundary our predictive model would have to fit?  Which models easily support this type of boundary?
 
-The heavy overlap between sepsis and non-sepsis cases in the PCA plot suggests that the two groups cannot be easily separated using a simple linear boundary. This indicates that the relationship between the predictors and sepsis is likely non-linear and more complex. Models such as random forests or XGBoost may be better at capturing these patterns because they use multiple decision trees rather than relying on a single linear combination of predictors.
+The heavy overlap between sepsis and non-sepsis cases in the PCA plot suggests that the two groups cannot be easily separated using a simple linear boundary. This indicates that the relationship between the predictors and sepsis is likely non-linear and more complex. Models such as random forests may be better at capturing these patterns because they use multiple decision trees rather than relying on a single linear combination of predictors.
+
 
 ---
 
