@@ -109,6 +109,34 @@ knitr::kable(variable_table)
 
 ```{r specialty-bar}
 #dplyr and ggplot code to count how many medical specialties are represented in the dataset and create a bar graph of them
+
+# making counts of each specialty
+specialty_counts <- raw_data %>%
+  count(medical_specialty, 
+        sort = TRUE)
+
+# number of unique specialties
+cat("Number of distinct specialties: ", n_distinct(raw_data$medical_specialty))
+
+# top 5 most specialties
+cat("Top 5 most common specialties: ")
+head(specialty_counts, 5)
+
+
+
+
+# bar plot of the transcripts from each specialty
+ggplot(specialty_counts,
+       aes(x = reorder(medical_specialty, n),
+           y = n)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Number of transcripts by medical specialty",
+    x = "Medical Specialty",
+    y = "Number of Transcripts"
+  ) +
+  theme_minimal()
 ```
 
 To make patterns slightly easier to interpret for the sake of learning, we will simplify our dataset down to just transcripts from three specialties that have relatively distinct clinical vocabularies: neurological medicine, musculoskeletal/orthopaedic, and diagnostic imaging. In real analyses this is something you would have to infer from the data as part of your exploratory data analysis.
