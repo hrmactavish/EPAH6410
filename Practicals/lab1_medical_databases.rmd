@@ -686,23 +686,22 @@ preds |>
 
 Now let's investigate whether the model work equally well/badly across patient groups?
 
-**Code deleted here due to not working**
+**Code deleted here due to it not working**
 
 ### Question 16
 
 **Q16 (2 marks).** Is there a subgroup where the model performs noticeably worse than the overall PR-AUC?
 Suggest one data-driven reason and one clinical reason that could explain the gap.
 
+Looking at the subgroup PR-AUC plot, all subgroups performed far worse than the overall test PR-AUC of approximately 0.70. The 80+ age group had no bar at all, meaning the model could not produce a PR-AUC estimate for that group, likely because there were too few or even zero sepsis cases in that subgroup after the test split. Among groups with values, the 66-80 year old subgroup performed the best (~0.012) and the males (Sex = 1) performed the worst (~0.07), however they were all very similar and low.
 
+A data-drive reason for this is that splitting the already small test set into subgroups leaves very few positive sepsis cases in each group, possibly none in certain groups, making the PR-AUC estimates impossible to calculate.
 
-Yes. All reported subgroups have PR-AUC values that are substaintially lower than the overall test PR-AUC indicating that model performance is worse within the indiviual subgroups. Among the grous with reported values, the male subgroup (Sex = 1) has the lowest PR-AUC (approximately 0.07). Additionally, the 80+ age group does not appear to have a reported PR-AUC (or if it does it is very low), which may indicate insuffieicent data or too few positive cases to estimate its performance reliably.
+A clinical reason is that sepsis can present very differently across age and sex groups. For example, elderly patients are known to have a differnt sepsis path than younger or mild-aged adults (*Alhamyani et al., 2024*). As the model is trained on the full population, it may have not learned the sepsis patterns that are specific to each subgroup well enough to reliably identify cases within them.
 
-A data-drive reason for the gap is that some subgroups may have small sample sizes or very few positive cases. Because the sepsis cases are rare, the model may struggle to identify positive cases consistency within smaller subgroups and can lead to lower subgroup PR-AUC values.
+Alhamyani AH, Alamri MS, Aljuaid NW, Aloubthani AH, Alzahrani S, Alghamdi AA, Lajdam AS, Alamoudi H, Alamoudi AA, Albulushi AM, AlQarni SN. Sepsis in Aging Populations: A Review of Risk Factors, Diagnosis, and Management. Cureus. 2024 Dec 2;16(12):e74973. doi:  (10.7759/cureus.74973)[https://pubmed.ncbi.nlm.nih.gov/39744263/]. PMID: 39744263; PMCID: PMC11691596.
 
-A clinical reason is that sepsis presents differently across age and sex groups and variations in their symptoms, co-morbidites, or healthcare utilization could change how the model performs.
-
-
-!!!!!!!!!!!!!!! **this is very bad**
+!!!!!!!!!!!!!!! **fix citation**
 
 ### 7.2 Variable importance
 
