@@ -290,7 +290,7 @@ The three variables with the highest missingness are:
 
 In an ICU context, missing lab values are typically not random and are usually informative, because clinicians only order certain tests when they suspect a specific condition (e.g., liver dysfunction or cardiac injury). This means that missingness can reflect clinical decision-making instead of data collection failure.
 
-**I don't think that the values should be imputed because it is informative, but there have been studies done that suggest that another variable could be included in the prediction model that indicates it the variable has missingness or not, implying that for example, when looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect (Groenwold, 2020).**
+I don't think that the values should be imputed because it is informative, but there have been studies done that suggest that another variable could be included in the prediction model that indicates it the variable has missingness or not, implying that for example, when looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect (Groenwold, 2020).
 
 Groenwold RHH. Informative missingness in electronic health record systems: the curse of knowing. Diagn Progn Res. 2020 Jul 2;4:8. doi: [10.1186/s41512-020-00077-0](https://doi.org/10.1186/s41512-020-00077-0). PMID: 32699824; PMCID: PMC7371469.
 
@@ -429,11 +429,7 @@ The two classes overlap heavily in the PC1/PC2 projection — this is common in 
 
 **Q10 (2 marks).** What does this tell us about the potential decision boundary our predictive model would have to fit?  Which models easily support this type of boundary?
 
-!!!!!!!!
-
-**The substantial overlap between septic and non-septic patients suggests that the relationship between predictors and sepsis is not easily separated by a simple linear boundary.**
-
-**This indicates that more complex non-linear decision boundaries may be required. Models such as random forests and XGBoost can naturally capture these non-linear relationships and interactions between variables.**
+The heavy overlap between sepsis and non-sepsis cases in the PCA plot suggests that the two groups cannot be easily separated using a simple linear boundary. This indicates that the relationship between the predictors and sepsis is likely non-linear and more complex. Models such as random forests or XGBoost may be better at capturing these patterns because they use multiple decision trees rather than relying on a single linear combination of predictors.
 
 ---
 
