@@ -204,7 +204,6 @@ train |>
  count(SepsisLabel) |>
  mutate(prop = n / sum(n))
 ```
-
 ### Question 5
 
 **Q5. (2 mark)** Using your solution to Q4, complete this plotting code to create a barplot of the relative sepsis label balance.  Change the colour of the sepsis bar to green.
@@ -280,7 +279,6 @@ train |>
 
 **Q8. (3 marks)** Which three variables have the highest missingness? In an ICU context, why might a lab value be missing - is this likely to be random, or informative? Does this mean you should drop or impute these values?
 
-!!!!!!
 
 The three variables with the highest missingness are:
 
@@ -288,9 +286,9 @@ The three variables with the highest missingness are:
 2. Fibrinogen
 3. Bilirubin_direct
 
-In an ICU context, missing lab values are typically not random and are usually informative, because clinicians only order certain tests when they suspect a specific condition (e.g., liver dysfunction or cardiac injury). This means that missingness can reflect clinical decision-making instead of data collection failure.
+In an ICU context, missing lab values are likely not random and are usually informative, because clinicians only order certain tests when they suspect a specific condition because labs take time and are a waste of resources if ordered when not required. This means that missingness can reflect clinical decision-making instead of a data collection failure.
 
-I don't think that the values should be imputed because it is informative, but there have been studies done that suggest that another variable could be included in the prediction model that indicates it the variable has missingness or not, implying that for example, when looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect (Groenwold, 2020).
+Because the missingness is informative and not random, imputing these values could introduce bias by treating a missing result as if it were a normal measured value. A better approach would be to add missingness indicator columns so that the model can learn from which values are absent. For example, if you were looking at cholesterol, the lower the cholesterol measurement, the more favourable, but the most favourable measurement is the lack of one because that would imply that the doctor was not worried about the outcomes that that variable is typically used to detect (Groenwold, 2020).
 
 Groenwold RHH. Informative missingness in electronic health record systems: the curse of knowing. Diagn Progn Res. 2020 Jul 2;4:8. doi: [10.1186/s41512-020-00077-0](https://doi.org/10.1186/s41512-020-00077-0). PMID: 32699824; PMCID: PMC7371469.
 
