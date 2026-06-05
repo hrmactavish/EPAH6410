@@ -93,6 +93,15 @@ knitr::kable(variable_table)
 
 **Q1b (2 marks):** What sort of information are you missing about how this dataset was created that could be important to your analyses?
 
+!!!!!!
+
+- how the notes were sampled
+- what were the notes sources (hospital/clinic/population)
+- time period in which they were collected
+- source population (ie. does it have varied demographics or is it a very homogeneous population)
+
+
+!!!!!!
 
 #### C
 
