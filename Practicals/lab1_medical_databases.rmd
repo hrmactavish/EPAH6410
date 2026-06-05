@@ -234,9 +234,9 @@ train |>
 
 **Q6. (3 marks)**  Given the class imbalance, which of the following 2 metrics might be the most misleading and why? accuracy, precision, recall, F1-score, ROC-AUC, PR-AUC?
 
-Accuracy and ROC-AUC are the two most misleading metrics given the class imbalance. Accuracy is misleading because sepsis is so rare in the dataset that if it just predicted "No Sepsis" for every patient it would still get 96.8% accuracy without actually identifying a single sepsis case. ROC-AUC can also be misleading because it accounts for true negatives in the denominator, and there are so many non-sepsis patients that the model can still look like its performing well overall even if it's actually doing a poor job of identifying the sepsis cases.
+Accuracy and ROC-AUC are the two most misleading metrics given the class imbalance. Accuracy is misleading because sepsis is so rare in the dataset that, if it just predicted "No Sepsis" for every patient, it would still achieve 96.8% accuracy without ever actually identifying a single sepsis case. This would make it look like an excellent model when it is actually not useful for the goal of identifying sepsis cases. ROC-AUC would also be misleading in this imbalanced dataset because it considers performance of both the positive and negative classifications. Because most patients do not have sepsis, a model can achieve a high ROC-AUC by correctly classifying the large number of non-sepsis patients, even if it misses many of the actual sepsis patients.
 
-PR-AUC would be more appropriate than the ROC-AUC in this case because it focuses specifically on how well the model can identify the rare positive class.
+Precision, recall, and F1-score would be less misleading because they focus on the model's ability to identify the sepsis cases and are not influenced by the number of true negatives. PR-AUC would be the most appropriate overall metric because it summarizes both precision and recall across all thresholds.
 
 ### 3.2 Missingness
 
@@ -739,7 +739,7 @@ Singer M, Deutschman CS, Seymour CW, Shankar-Hari M, Annane D, Bauer M, et al. T
 
 The biggest limitation of this analysis is the static sampling approach, where a single random observation was selected from each patient's ICU stay. This removes all temporal information and prevents the model from capturing trends over time, such as vital signs and laboratory values getting worse, which would be signs that someone is developing sepsis or their sepsis is worsening.
 
-I would not recommend deploying this model in a real ICU because the best model only achieved a sensitivity of 0.42, meaning that more than half of the true sepsis cases would be missed. Before being deployed, the model should be developed using the actual time-series data to see if that improves the classification. 
+I would not recommend deploying this model in a real ICU because the best model only achieved a sensitivity of ~0.42, meaning that more than half of the true sepsis cases would be missed. Before being deployed, the model should be developed using the actual time-series data to see if that improves the classification. 
 
 ---
 
