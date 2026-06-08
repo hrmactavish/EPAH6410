@@ -330,9 +330,9 @@ ggplot(lexicon_counts,
   geom_col() +
   coord_flip() +
   labs(
-    title = "Number of Unique Stop Words per Lexicon",
+    title = "Number of unique stop words per lexicon",
     x = "Lexicon",
-    y = "Number of Unique Stop Words"
+    y = "Number of unique stop words"
   ) +
   theme_minimal()
 ```
@@ -358,6 +358,10 @@ tokenised_data |>
     summarise(mean_unique_words = mean(unique_words))
 
 ```
+
+Orthopedic notes have the largest total vocabulary (7,692 unique words), while radiology notes have the smallest (5,971). However, when examining unique words per note, neurology notes contain the most (174.7 words/note) and radiology notes the fewest (105.5 words/note), suggesting that radiology transcriptions tend to use more standardized language, whereas neurology notes contain a broader and more diverse vocabulary.
+
+!!!!!!!
 
 ### Bigrams
 
@@ -665,6 +669,10 @@ lda_beta <- tidy(emr_lda, matrix = "beta")
 
 lda_beta |>
   group_by(topic) |>
+  slice_max(beta, n = 12, with_ties = FALSE)
+
+lda_beta |>
+  group_by(topic) |>
   slice_max(beta, n = 12, with_ties = FALSE) |>
   ggplot(aes(beta,
              reorder_within(term, beta, topic),
@@ -684,6 +692,10 @@ descriptive clinical label (e.g., "imaging", "musculoskeletal", "neurological").
 Which topic do you think corresponds most closely to which specialty, and why?
 Does the vocabulary in each topic match your expectations from the TF-IDF
 results in Section 6?
+
+!!!!!!!!!
+
+!!!!!!!!!
 
 ### Document–topic distributions (γ) by specialty
 
@@ -723,22 +735,31 @@ lda_gamma_specialty |>
 one topic has a noticeably higher mean γ than the others for that specialty)?
 Does this align with the clinical label you assigned to that topic in Q11?
 
+!!!!!!!!!
+
+!!!!!!!!!
+
 (b) Uncomment and complete the code below to compute, for each specialty, the single topic
 with the highest mean γ. Replace each `___` with the correct column name or
 expression.
 
 ```{r q12b}
-#lda_gamma_specialty |>
-#  group_by(___, ___) |>
-#  summarise(mean_gamma = mean(gamma), .groups = "drop") |>
-#  group_by(___) |>
-#  slice_max(___, n = 1)
+lda_gamma_specialty |>
+  group_by(medical_specialty, topic) |>
+  summarise(mean_gamma = mean(gamma), .groups = "drop") |>
+  group_by(medical_specialty) |>
+  slice_max(mean_gamma, n = 1)
 ```
 
 (c) Sun et al. (2024) ran LDA on social work notes *without knowing in advance*
 what topics would emerge. How does their situation differ from this exercise,
 where we set `k = 3` to match three known specialties? What does this suggest
 about how to choose the number of topics *k* in a real exploratory analysis?
+
+
+!!!!!!!!!
+
+!!!!!!!!!
 
 ---
 
@@ -798,6 +819,10 @@ classification?
 topic assignment. Which approach would you prefer for classifying a large batch
 of new clinical notes, and why? 
 
+!!!!!!!!!
+
+!!!!!!!!!
+
 ---
 
 ## Tying back to the literature
@@ -810,12 +835,20 @@ SDoH-related topics they identified and state the name of the metric they used
 to evaluate topic quality (hint: it measures the coherence of the top words
 within a topic).
 
+!!!!!!!!!
+
+!!!!!!!!!
+
 ### Question 15
 
 **Q15 (1 mark):** Chung et al. (2024) tested GPT-4 Turbo on both
 classification and numerical prediction tasks. Name one task where the LLM
 performed well (give the F1 score) and one where it failed to beat a simple
 baseline (give the MAE and the baseline value for comparison).
+
+!!!!!!!!!
+
+!!!!!!!!!
 
 ---
 
