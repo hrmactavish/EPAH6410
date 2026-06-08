@@ -107,7 +107,7 @@ knitr::kable(variable_table)
 
 **Q1c (2 marks):** How many distinct medical specialties are represented?  What are the most common 5? Create a ggplot bar graph showing how many transcripts come from each specialty.  
 
-```{r specialty-bar}
+```{r specialty-bar, fig.height = 10}
 #dplyr and ggplot code to count how many medical specialties are represented in the dataset and create a bar graph of them
 
 # making counts of each specialty
@@ -119,7 +119,7 @@ specialty_counts <- raw_data %>%
 cat("Number of distinct specialties: ", n_distinct(raw_data$medical_specialty))
 
 # top 5 most specialties
-cat("Top 5 most common specialties: ")
+cat("\nTop 5 most common specialties: ")
 head(specialty_counts, 5)
 
 
@@ -235,20 +235,15 @@ Report how many notes in each specialty contain at least one temperature mention
 
 Regex builders like [this website](https://spannbaueradam.shinyapps.io/r_regex_tester/) can make it a lot quicker to iterate and improve your regular expressions!
 
+
+!!!!!!!! *check for duplicates*
+
+make a list of temperature related terms
+
+
 ```{r q2}
 # Your code here
-temp_pattern <- "((\\btemperature\\b|\\btemp\\b)\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)|(\\bafebrile\\b)|(\\b\\d{2,3}\\.?\\d*\\s*°?\\s*[fFcC]\\b)|(\\bT\\b\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)"
-
-# for temperature of: ((temperature|temp)\\s+of\\s+\\d{2,3}\\.?\\d*)
-
-# for afebrile: (afebrile) 
-# ? what about febrile
-
-# for the number temps: (\\d{2,3}\\.?\\d*\\s*°?\\s*[fFcC])
-
-
-
-# "((temperature|temp)\\s+of\\s+\\d{2,3}\\.?\\d*)|(afebrile)|(\\b\\d{2,3}\\.?\\d*\\s*°?\\s*[fFcC]\\b)|(\\bT\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)"
+temp_pattern <- "((\\btemperature\\b|\\btemp\\b)\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)|(\\ba?febrile\\b)|(\\b\\d{2,3}\\.?\\d*\\s*(°?\\s*(F|C)|Fahrenheit|Celsius)\\b)|(\\bT\\b\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)"
 
 temp_measurements <- filtered_data %>%
   mutate(
@@ -263,11 +258,13 @@ temp_measurements <- filtered_data %>%
 temp_measurements
 ```
 
+60 notes in neurology contain atleast one mention of temperature, 25 notes in orthopedics contain at least one mention of temperature, and 39 notes in radiology contain at least one mention of termperature.
+
 ```{r}
 filtered_data %>%
   mutate(temp_match = str_extract(transcription, regex(temp_pattern, ignore_case = TRUE))) %>%
   filter(!is.na(temp_match)) %>%
-  select(medical_specialty, temp_match) 
+  select(note_id, medical_specialty, temp_match) 
 ```
 
 
@@ -299,7 +296,45 @@ glimpse(tokenised_data)
 
 **Q3 (2 marks):** How many stop words are in the `stop_words` list, how many different `lexicon` are included, and which `lexicon` contains the most stop words? Answer these questions using code below and create a bargraph of the number of unique stop words per lexicon.
 
-```{r stop-word-lexicons}
+```{r stop-word-lexicons, fig.height = 4}
+# number of stop words
+n_stop_words <- nrow(stop_words)
+
+# number of lexicons
+n_lexicons <- n_distinct(stop_words$lexicon)
+
+# count unique stop words per lexicon
+lexicon_counts <- stop_words %>%
+  distinct(lexicon, word) %>%
+  count(lexicon, name = "n_words") %>%
+  arrange(desc(n_words))
+
+# lexicon with the most stop words
+largest_lexicon <- lexicon_counts %>%
+  slice_max(n_words, n = 1)
+
+cat("Number of stop words: ", n_stop_words)
+cat("\nNumber of different lexicon included: ", n_lexicons)
+cat(
+  "\nLexicon that contains the most words:",
+  largest_lexicon$lexicon,
+  "with",
+  largest_lexicon$n_words,
+  "words\n"
+)
+
+# bar graph
+ggplot(lexicon_counts,
+       aes(x = reorder(lexicon, n_words),
+           y = n_words)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Number of Unique Stop Words per Lexicon",
+    x = "Lexicon",
+    y = "Number of Unique Stop Words"
+  ) +
+  theme_minimal()
 ```
 
 ### Question 4
@@ -311,16 +346,16 @@ vocabulary and which the smallest? Complete the code below, then provide a
 
 ```{r q4}
 ## Uncomment and complete this pipeline-fill in the blank inside n_distinct()
-#tokenised_data |>
-#  group_by(medical_specialty) |>
-#  summarise(unique_words = n_distinct(___))
+tokenised_data |>
+  group_by(medical_specialty) |>
+  summarise(unique_words = n_distinct(word))
 
 ## Now calculate the mean number of unique unigrams per NOTE for each specialty
-#  tokenised_data |>
-#    group_by(medical_specialty, note_id) |>
-#    summarise(unique_words = n_distinct(word), .groups = "drop") |>
-#    group_by(medical_specialty) |>
-#    summarise(mean_unique_words = ___ )
+  tokenised_data |>
+    group_by(medical_specialty, note_id) |>
+    summarise(unique_words = n_distinct(word), .groups = "drop") |>
+    group_by(medical_specialty) |>
+    summarise(mean_unique_words = mean(unique_words))
 
 ```
 
@@ -353,9 +388,12 @@ bigrams |>
 **Q5 (1 mark):** What is the most common bigram in each specialty?
 
 ```{r bigram_totals}
-
+bigrams |>
+  count(medical_specialty, bigram, sort = TRUE) |>
+  slice_max(n, n = 1, by = medical_specialty, with_ties = FALSE)
 ```
 
+In orthopedics it is	preoperative diagnosis, neurology is	lower extremities, and radiology is	carotid artery.
 
 ### Sentence segmentation
 
@@ -379,7 +417,9 @@ sentences_data |>
 Uncomment and complete the code below (replace each `___` with the correct column name):
 
 ```{r q6}
-
+sentences_data |>
+  group_by(medical_specialty) |>
+  summarise(unique_sentences = n_distinct(sentence))
 ```
 
 ## Stemming and Lemmatization
@@ -410,15 +450,29 @@ word_sample |>
 **Q7 (1 mark):**  Does lemmatising or stemming result in fewer unique words?
 
 ```{r stemming_v_lemmatising}
-
+word_sample |>
+  summarise(
+    unique_original = n_distinct(word),
+    unique_stemmed  = n_distinct(stem),
+    unique_lemma    = n_distinct(lemma)
+  )
 ```
+
+Stemming results in fewer unique words.
 
 ### Question 8
 
-**Q8 (2 marks):** In 2-3 sentences explain why a general-purpose English
-lemmatizer is likely to perform poorly on medical transcription text. Give at
+**Q8 (2 marks):** In 2-3 sentences explain why a general-purpose English lemmatizer is likely to perform poorly on medical transcription text. Give at
 least two examples of medical terms that would likely be handled incorrectly
 and describe what goes wrong.
+
+!!!!!!!!
+
+- general-purpose English lemmatizers are trained on everyday language and have no knowledge of Latin/Greek medical morphology, so they misinterpret domain-specific suffixes and roots
+- Example 1: atria might not correctly be lemmatized to atrium because it is Latin
+- Example 2: Bronchi to Bronchus
+
+!!!!!!
 
 ### Applying lemmatisation to the full dataset
 
@@ -480,6 +534,8 @@ Identify one term that surprises you from any specialty. Complete the code below
 `"your_term_here"` with that term to pull an example transcription containing
 it, then briefly explain its clinical context.
 
+!!!!!!!!!!
+
 ```{r q9}
 filtered_data |>
   filter(str_detect(transcription, "your_term_here")) |>
@@ -487,6 +543,9 @@ filtered_data |>
   pull(transcription) |>
   str_trunc(600)
 ```
+
+
+!!!!!!!!
 
 ### Comparing lemma proportions across specialties
 
