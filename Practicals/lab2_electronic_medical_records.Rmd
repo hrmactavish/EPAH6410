@@ -799,16 +799,19 @@ the following prompt:
 (a) What specialty did the LLM predict, and was it correct? Does it match the
 topic with the highest γ from the LDA model above?
 
+Microsoft Copilot correctly classified the not as orthopedic, matching both the true label and tbe LDA model's assignment, the note had a gamma of approximately 1.0 for topic 3, the musculoskeletal/orthopedic topic.
+
 (b) What specific features of the text did the LLM cite to justify its
 classification?
+
+The LLM cited the surgical procedures (bunionectomy, arthrodesis, hammertoe repair, extensor tenotomy and capsulotomy), musculoskeletal conditions (degenerative joint disease and rheumatoid arthritis affecting the foot), which it explained would need to be treated with orthopedic surgery instead of imaging or neurology.
 
 (c) Compare LLM's explanation-based classification with LDA's unsupervised
 topic assignment. Which approach would you prefer for classifying a large batch
 of new clinical notes, and why? 
 
-!!!!!!!!!
 
-!!!!!!!!!
+For classifying a large batch of clinical notes, I would generally prefer the LLM approach for classification because it can use contextual information and medical knowledge to explain its predictions, whereas the LDA identified patterns of word co-occurence without understanding their clinical meaning.
 
 ---
 
