@@ -426,6 +426,8 @@ sentences_data |>
   summarise(unique_sentences = n_distinct(sentence))
 ```
 
+Orthopedic notes have the highest number of unique sentences, likely due to their larger sample size (355 notes), whereas radiology notes have the fewest, consistent with them having the fewest unique words and words per note.
+
 ## Stemming and Lemmatization
 
 However, given how noisy language is and the many variants of the same word (alternative suffixes) like pluralisation or possessive apostrophes. We also often want to "normalise" words to a common base form. There are two main approaches to this:
@@ -542,7 +544,7 @@ it, then briefly explain its clinical context.
 
 ```{r q9}
 filtered_data |>
-  filter(str_detect(transcription, "your_term_here")) |>
+  filter(str_detect(transcription, "stealth")) |>
   slice(1) |>
   pull(transcription) |>
   str_trunc(600)
@@ -596,6 +598,10 @@ between Orthopedic and Neurology compared with Orthopedic and Radiology? Is
 this what you would expect given the clinical roles of each specialty? Justify
 your answer in 2-4 sentences.
 
+
+The plot shows that orthopedic and neurology share more similar proportions in both specialties than orthopedic and radiology.
+
+!!!!!!!!!!!! *need to finish this*
 ---
 
 ## Topic Modelling with Latent Dirichlet Allocation
