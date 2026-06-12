@@ -354,12 +354,10 @@ tokenised_data |>
     summarise(unique_words = n_distinct(word), .groups = "drop") |>
     group_by(medical_specialty) |>
     summarise(mean_unique_words = mean(unique_words))
-
 ```
 
-Orthopedic notes have the largest total vocabulary (7,692 unique words), while radiology notes have the smallest (5,971). However, when examining unique words per note, neurology notes contain the most (174.7 words/note) and radiology notes the fewest (105.5 words/note), suggesting that radiology transcriptions tend to use more standardized language, whereas neurology notes contain a broader and more diverse vocabulary.
+Orthopedic notes have the largest overall vocabulary, with 7,692 unique words, while radiology notes contained the smallest vocabulary, with 5,971 unique words. However, neurology notes had. the highest average number of unique words per note (174.7), suggesting that individual neurology reports use more varied language than other specialties.
 
-!!!!!!!
 
 ### Bigrams
 
