@@ -746,10 +746,7 @@ what topics would emerge. How does their situation differ from this exercise,
 where we set `k = 3` to match three known specialties? What does this suggest
 about how to choose the number of topics *k* in a real exploratory analysis?
 
-
-!!!!!!!!!
-
-!!!!!!!!!
+Unlike this exercise, where the number of topics was fixed at three because the specialties were already known, Sun et al. (2024) determined the optimal number of topics experimentally. They evaluated multiple values of K and selected the solution that balanced high topic coherence with low topic similarity, producing topics that were both interpretable and non-redundant.
 
 ---
 
