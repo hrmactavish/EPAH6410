@@ -103,6 +103,9 @@ One important limitation of the dataset description is that the authors do not p
 
 **Q1c (2 marks):** How many distinct medical specialties are represented?  What are the most common 5? Create a ggplot bar graph showing how many transcripts come from each specialty.  
 
+
+Answers in the R outputs below: 
+
 ```{r specialty-bar, fig.height = 10}
 #dplyr and ggplot code to count how many medical specialties are represented in the dataset and create a bar graph of them
 
