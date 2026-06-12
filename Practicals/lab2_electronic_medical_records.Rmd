@@ -73,6 +73,8 @@ I've not supplied a data dictionary with this dataset. This is a VERY common sit
 
 **Q1a (2 marks):** Based on the `glimpse()` output create a simple data dictionary (variable name with a 1-2 sentence explanation of the variable).
 
+Data dictionary in a table below:
+
 ```{r}
 variable_table <- data.frame(
   Variable = c("note_id", "description", 
