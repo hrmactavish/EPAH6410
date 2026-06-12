@@ -12,8 +12,6 @@ output:
     theme: cosmo
     highlight: tango
     number_sections: false
-editor_options:
-  chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
@@ -182,10 +180,26 @@ benefit of being able to flag *referable* DR automatically from a photograph? Wh
 screening tool prefer to err towards over-referral? *(Hint: see the opening paragraphs of
 Gulshan et al.)*
 
+
+Diabetic retinopathy (DR) is a complication of diabetes where blood vessels in the retina are damaged, which can lead to vision loss or blindness if it is not treated. 
+
+Referable DR refers to moderate or more severe DR or diabetic macular edema, where patients are recommended closer follow-up or referral to an ophthalmologist instead of annual screening.
+
+Automatically identifying referable DR from retinal photographs could improve screening efficiency, increase the access to care, and allow earlier detection and treatment of patients who are at risk of consequences of referable DR, such as vision loss.
+ 
+A screening tool might prefer to err towards over-referral because missing a patient with referable DR (a false negative) could delay treatment and result in a person having vision loss when it could have been prevented. Although over-referral might result in an increase of unnecessary specialist visits, it would be less harmful then failing to identify a person who really needs treatment.
+
+
 ### Question 2
 
 **Q2 (2 marks):** Based on `glimpse()` and the data dictionary above, what information about
 how these images were captured is **missing** that could matter for an analysis? Give two examples and say why each matters.
+
+1. 
+
+
+
+
 
 ### 2.3 Class balance
 
@@ -203,7 +217,7 @@ labels |>
   theme(legend.position = "none")
 ```
 
-### Question 3s
+### Question 3
 
 **Q3 (1 marks):** What sort of ML issues may arise with a dataset that has this sort of label/class balance?
 
@@ -463,15 +477,15 @@ a *small random rotation* (`transform_random_rotation(degrees = ...)`). (Hint: u
 
 ```{r q8-augment}
 ## Uncomment, complete the rotation, and rebuild the augmented training dataloader.
-# train_transform <- function(path) {
-#   base_loader(path) |>
-#     transform_to_tensor() |>
-#     transform_random_resized_crop(size = c(224, 224), scale = c(0.8, 1.0)) |>
-#     transform_random_horizontal_flip(p = 0.5) |>
-#     transform_random_rotation(degrees = ___) |>
-#     transform_color_jitter(brightness = 0.2, contrast = 0.2) |>
-#     transform_normalize(mean = imagenet_mean, std = imagenet_std)
-# }
+train_transform <- function(path) {
+  base_loader(path) |>
+    transform_to_tensor() |>
+    transform_random_resized_crop(size = c(224, 224), scale = c(0.8, 1.0)) |>
+    transform_random_horizontal_flip(p = 0.5) |>
+    transform_random_rotation(degrees = c(-45, 45)) |>
+    transform_color_jitter(brightness = 0.2, contrast = 0.2) |>
+    transform_normalize(mean = imagenet_mean, std = imagenet_std)
+}
 ```
 
 Now apply your new augmentations - this will use the incorrect augmentations if you haven't completed Q8!
