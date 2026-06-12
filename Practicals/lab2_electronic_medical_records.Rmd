@@ -725,9 +725,9 @@ lda_gamma_specialty |>
 one topic has a noticeably higher mean γ than the others for that specialty)?
 Does this align with the clinical label you assigned to that topic in Q11?
 
-!!!!!!!!!
+The gamma plot shows that topic 1 is the dominant topic for neurology and radiology, accounting for approximately 81% and 73% of their average topic proportions, respectively. In contrast, topic 3 is the dominant topic in orthopedic, accounting for approximately 57% of the average topic proportion. Topic 2 contributes a smaller proportion across all three specialties and appears to present a potential secondary theme instead of the primary focus of any specialty.
 
-!!!!!!!!!
+This interpretation is fairly consistent with the beta plot. Topic 3 contains musculoskeletal terms such as "tendon", "knee", "joint", "fracture", "foot", and "ligament", which are most specific to orthopedic notes. Topic 2 contains spinal and neurological terms such as "cervical", "spine", "cord", "root", and "canal", while topic 1 contains imagining-related terms such as "CT", "mass", "tumor", "lesion", "negative", and "unremarkable". The overlap between neurology and radiology in topic 1 most likely reflects the frequent use of imaging in the diagnosis and evaluation of multiple neurological conditions.
 
 (b) Uncomment and complete the code below to compute, for each specialty, the single topic
 with the highest mean γ. Replace each `___` with the correct column name or
