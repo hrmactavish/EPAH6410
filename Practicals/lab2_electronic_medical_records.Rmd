@@ -79,7 +79,7 @@ variable_table <- data.frame(
                "medical_specialty", "sample_name", 
                "transcription", "keywords"),
   Description = c("The unique identifier for each note.",
-                  "A description of the chief concern.",
+                  "A description or the main concern.",
                   "The medical specialty of the note.",
                   "The name of the note from mtsamples.com.", 
                   "The transcription of note text.",
@@ -93,15 +93,9 @@ knitr::kable(variable_table)
 
 **Q1b (2 marks):** What sort of information are you missing about how this dataset was created that could be important to your analyses?
 
-!!!!!!
 
-- how the notes were sampled
-- what were the notes sources (hospital/clinic/population)
-- time period in which they were collected
-- source population (ie. does it have varied demographics or is it a very homogeneous population)
+One important limitation of the dataset description is that the authors do not provide information about how the notes were sampled besides their specialty classification. The dataset also lacks details about the demographics of the patients, the healthcare setting in which the notes were taken in (ex. physician billing or hospital discharge notes), and the time period that is represented in the dataset, making it difficult to assess the representativeness of the people in the dataset and the generalizability of the data.
 
-
-!!!!!!
 
 #### C
 
