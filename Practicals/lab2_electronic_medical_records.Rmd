@@ -810,7 +810,6 @@ The LLM cited the surgical procedures (bunionectomy, arthrodesis, hammertoe repa
 topic assignment. Which approach would you prefer for classifying a large batch
 of new clinical notes, and why? 
 
-
 For classifying a large batch of clinical notes, I would generally prefer the LLM approach for classification because it can use contextual information and medical knowledge to explain its predictions, whereas the LDA identified patterns of word co-occurence without understanding their clinical meaning.
 
 ---
@@ -824,6 +823,8 @@ to clinical social work notes to explore SDoH factors. Name two of the
 SDoH-related topics they identified and state the name of the metric they used
 to evaluate topic quality (hint: it measures the coherence of the top words
 within a topic).
+
+Two SDoH-related topics identified by Sun et al., were Metal Health (characterized by terms such as depression, anxiety, mood, therapy, and psychological) and Abuse History (characterized by terms such as abuse, addiction, alcohol, substances, and violence). The metric they used to evaluate topic quality was topic coherence, which quantifies the semantic similarity between highest-scoing words within a topic by uising normalized point wise mutual information and cosine similarity, helping to distinguish between topics that are genuinely interpretable and those that are artefacts of statistical interference.
 
 !!!!!!!!!
 
