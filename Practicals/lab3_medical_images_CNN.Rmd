@@ -198,7 +198,7 @@ how these images were captured is **missing** that could matter for an analysis?
 1. 
 
 
-
+!!!!!!!!!
 
 
 ### 2.3 Class balance
