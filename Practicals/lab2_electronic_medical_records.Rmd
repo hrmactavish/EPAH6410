@@ -663,10 +663,6 @@ lda_beta <- tidy(emr_lda, matrix = "beta")
 
 lda_beta |>
   group_by(topic) |>
-  slice_max(beta, n = 12, with_ties = FALSE)
-
-lda_beta |>
-  group_by(topic) |>
   slice_max(beta, n = 12, with_ties = FALSE) |>
   ggplot(aes(beta,
              reorder_within(term, beta, topic),
@@ -687,9 +683,9 @@ Which topic do you think corresponds most closely to which specialty, and why?
 Does the vocabulary in each topic match your expectations from the TF-IDF
 results in Section 6?
 
-!!!!!!!!!
+Topic 1 can be labeled as "imaging", topic 2 can be labelled "neurological", and topic 3 can be labeled "musculoskeletal". Topic 1 most likely corresponds most closely to radiology because it contains terms such as "CT", "mass", "tumor", "lesion", "negative", and "unremarkable", which are words that are most likely used in imaging reports. Topic 2 likely corresponds most closely to neurology because it contains terms such as "cervical", "spine", "cord", "root", and "canal", which are words associated with the nervous system and spinal cord. Topic 3 corresponds most closely to orthopedics because it contains terms such as "tendon", "knee", "joint", "fracture", "foot", and "ligament", which are terms associated with the musculoskeletal system (orthopedics focus).
 
-!!!!!!!!!
+The vocabulary in each topic appears to match the TF-IDF results well. The imaging topic contains radiology-related terms, the neurological topic contains spinal and nervous system terminology, and the musculoskeletal topic contains orthopedic structures and injuries. This suggests that both TF-IDF and LDA identified similar specialty-specific patterns in the clinical notes.
 
 ### Document–topic distributions (γ) by specialty
 
