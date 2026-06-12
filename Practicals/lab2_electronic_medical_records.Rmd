@@ -249,7 +249,8 @@ temp_measurements <- filtered_data %>%
   summarise(n = n(), .groups = "drop")
 
 temp_measurements %>%
-  filter(has_temp == TRUE)
+  filter(has_temp == TRUE) %>%
+  select(-has_temp)
 ```
 
 60 notes in neurology contain atleast one mention of temperature, 25 notes in orthopedics contain at least one mention of temperature, and 39 notes in radiology contain at least one mention of temperature.
@@ -264,8 +265,6 @@ filtered_data %>%
   head(10)
 ```
 
-
-!!!!!!!!!!
 ---
 
 ## Text Normalisation
