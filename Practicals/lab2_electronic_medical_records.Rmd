@@ -826,10 +826,6 @@ within a topic).
 
 Two SDoH-related topics identified by Sun et al., were Metal Health (characterized by terms such as depression, anxiety, mood, therapy, and psychological) and Abuse History (characterized by terms such as abuse, addiction, alcohol, substances, and violence). The metric they used to evaluate topic quality was topic coherence, which quantifies the semantic similarity between highest-scoing words within a topic by uising normalized point wise mutual information and cosine similarity, helping to distinguish between topics that are genuinely interpretable and those that are artefacts of statistical interference.
 
-!!!!!!!!!
-
-!!!!!!!!!
-
 ### Question 15
 
 **Q15 (1 mark):** Chung et al. (2024) tested GPT-4 Turbo on both
@@ -837,9 +833,9 @@ classification and numerical prediction tasks. Name one task where the LLM
 performed well (give the F1 score) and one where it failed to beat a simple
 baseline (give the MAE and the baseline value for comparison).
 
-!!!!!!!!!
+One task where GPT-4 Turbo performed well was hospital mortality prediction, where the best prompt strategy (10-shot or 20-shot without chain-of-thought) achieved an F1 score of 0.86, which was 1.76 times greater than the random classifier baseline F1 of 0.49. 
 
-!!!!!!!!!
+One task where the LLM failed to beat a simlpe baseline was PACU phase 1 duration prediction, where the best prompt strategy (zero-shot using original notes) achieved an MAE of 49 minutes, which was actually worse than the dummy regressor baseline MAE of 36 minutes, meaning the LLM prefornmed 36% worse than simply predicting the mean value, demonstrating that GPT-4 Turbo struggles substaintially with numerical regression tasks in the perioperative setting.
 
 ---
 
