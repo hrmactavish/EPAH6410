@@ -422,7 +422,7 @@ sentences_data |>
   summarise(unique_sentences = n_distinct(sentence))
 ```
 
-Orthopedic notes have the highest number of unique sentences, likely due to their larger sample size (355 notes), whereas radiology notes have the fewest, consistent with them having the fewest unique words and words per note.
+There are 11175 unique sentences for the orthopedic specialty, 6647 for neurology, and 4567 for radiology.
 
 ## Stemming and Lemmatization
 
