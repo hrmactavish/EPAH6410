@@ -292,6 +292,8 @@ glimpse(tokenised_data)
 
 **Q3 (2 marks):** How many stop words are in the `stop_words` list, how many different `lexicon` are included, and which `lexicon` contains the most stop words? Answer these questions using code below and create a bargraph of the number of unique stop words per lexicon.
 
+Answers in the code chunk outputs below:
+
 ```{r stop-word-lexicons, fig.height = 4}
 # number of stop words
 n_stop_words <- nrow(stop_words)
