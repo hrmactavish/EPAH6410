@@ -530,7 +530,9 @@ Identify one term that surprises you from any specialty. Complete the code below
 `"your_term_here"` with that term to pull an example transcription containing
 it, then briefly explain its clinical context.
 
-!!!!!!!!!!
+The TF-IDF terms make clinical sense because the highest-ranked terms reflect concepts that are particularly important within each specialty. Orthopedic notes contain terms related to bones, joints, and surgical procedures, while radiology notes emphasize imagining findings and diagnostic interpretation. Neurology notes contain terms associated with the brain, nervous system, and neurological conditions.
+
+One term that initially surprised me was "stealth" in the neurology specialty, as it does not appear to be a medical term. However, reviewing the source note revealed that it referred to a surgical navigation system used during neurosurgical procedures. According to [Medtronic](https://www.medtronic.com/en-us/healthcare-professionals/products/surgical-navigation-imaging/surgical-navigation-systems/stealthstation-s8-navigation-platform.html), it is a system used to help track and guide tools during spinal and cranial surgical procedures.
 
 ```{r q9}
 filtered_data |>
@@ -540,8 +542,6 @@ filtered_data |>
   str_trunc(600)
 ```
 
-
-!!!!!!!!
 
 ### Comparing lemma proportions across specialties
 
@@ -588,10 +588,8 @@ between Orthopedic and Neurology compared with Orthopedic and Radiology? Is
 this what you would expect given the clinical roles of each specialty? Justify
 your answer in 2-4 sentences.
 
+The plot shows that orthopedic and neurology share more words with similar frequencies, as many points lie closer to the diagonal line, then orthopedic and radiology do. Orthopedic and neurology show greater separation, with more words appearing far from the diagonal. This may be partly because orthopedic and neurology have larger vocabularies than radiology, creating more opportunities for overlapping terminology. However, the pattern is also likely driven by the fact that both specialties talk about anatomical structure and symptoms/clinical findings, whereas radiology uses a more specialized vocabulary focused on imaging procedures and interpretations.
 
-The plot shows that orthopedic and neurology share more similar proportions in both specialties than orthopedic and radiology.
-
-!!!!!!!!!!!! *need to finish this*
 ---
 
 ## Topic Modelling with Latent Dirichlet Allocation
