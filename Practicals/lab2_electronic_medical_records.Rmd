@@ -468,13 +468,7 @@ Stemming results in fewer unique words.
 least two examples of medical terms that would likely be handled incorrectly
 and describe what goes wrong.
 
-!!!!!!!!
-
-- general-purpose English lemmatizers are trained on everyday language and have no knowledge of Latin/Greek medical morphology, so they misinterpret domain-specific suffixes and roots
-- Example 1: atria might not correctly be lemmatized to atrium because it is Latin
-- Example 2: Bronchi to Bronchus
-
-!!!!!!
+General-purpose English lemmatizers are not designed specifically for medical terminology, which frequently uses Latin or Greek terms, and may fail to correctly reduce the specialized words to their base forms. For example, atria and bronchi would likely not be converted to atrium and bronchus, which would cause related words to be treated as separate terms and reduce the effectiveness of text normalization for medical students.
 
 ### Applying lemmatisation to the full dataset
 
