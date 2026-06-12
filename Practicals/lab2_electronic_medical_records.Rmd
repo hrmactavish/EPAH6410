@@ -234,12 +234,6 @@ Report how many notes in each specialty contain at least one temperature mention
 
 Regex builders like [this website](https://spannbaueradam.shinyapps.io/r_regex_tester/) can make it a lot quicker to iterate and improve your regular expressions!
 
-
-!!!!!!!! *check for duplicates*
-
-make a list of temperature related terms
-
-
 ```{r q2}
 # Your code here
 temp_pattern <- "((\\btemperature\\b|\\btemp\\b)\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)|(\\ba?febrile\\b)|(\\b\\d{2,3}\\.?\\d*\\s*(°?\\s*(F|C)|Fahrenheit|Celsius)\\b)|(\\bT\\b\\s*(of)?\\s*[:=]?\\s*\\d{2,3}\\.?\\d*)"
@@ -254,16 +248,20 @@ temp_measurements <- filtered_data %>%
   group_by(medical_specialty, has_temp) %>%
   summarise(n = n(), .groups = "drop")
 
-temp_measurements
+temp_measurements %>%
+  filter(has_temp == TRUE)
 ```
 
-60 notes in neurology contain atleast one mention of temperature, 25 notes in orthopedics contain at least one mention of temperature, and 39 notes in radiology contain at least one mention of termperature.
+60 notes in neurology contain atleast one mention of temperature, 25 notes in orthopedics contain at least one mention of temperature, and 39 notes in radiology contain at least one mention of temperature.
+
+I made a list of terms that it picked up because I was curious, this is a sample of them:
 
 ```{r}
 filtered_data %>%
   mutate(temp_match = str_extract(transcription, regex(temp_pattern, ignore_case = TRUE))) %>%
   filter(!is.na(temp_match)) %>%
-  select(note_id, medical_specialty, temp_match) 
+  select(note_id, medical_specialty, temp_match) %>%
+  head(10)
 ```
 
 
