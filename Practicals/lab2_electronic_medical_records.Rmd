@@ -80,12 +80,13 @@ variable_table <- data.frame(
   Variable = c("note_id", "description", 
                "medical_specialty", "sample_name", 
                "transcription", "keywords"),
-  Description = c("The unique identifier for each note.",
-                  "A description or the main concern.",
-                  "The medical specialty of the note.",
-                  "The name of the note from mtsamples.com.", 
-                  "The transcription of note text.",
-                  "Keywords related to the note.")
+  Description = c(
+    "The unique identifier for each note.",
+    "A description or the main concern.",
+    "The medical specialty of the note.",
+    "The name of the note from mtsamples.com.", 
+    "Free-text transcription of the clinical note.",
+    "Keywords related to the note.")
 )
 
 knitr::kable(variable_table)
@@ -95,9 +96,7 @@ knitr::kable(variable_table)
 
 **Q1b (2 marks):** What sort of information are you missing about how this dataset was created that could be important to your analyses?
 
-
-One important limitation of the dataset description is that the authors do not provide information about how the notes were sampled besides their specialty classification. The dataset also lacks details about the demographics of the patients, the healthcare setting in which the notes were taken in (ex. physician billing or hospital discharge notes), and the time period that is represented in the dataset, making it difficult to assess the representativeness of the people in the dataset and the generalizability of the data.
-
+Several pieces of information are missing about how this dataset was created. It is unclear how the notes were sampled (e.g., randomly sampled or by convenience), which matters because non-random sampling could mean certain note types or patient presentations could be over- or under-represented, potentially biasing any patterns. The healthcare setting is also unknown (e.g., inpatient hospital, outpatient clinic), which is importnat because clinical language and documentation styles can vary across different settings. The time period of collection is also missing, which matters because medical terminology and practices can change over time.
 
 #### C
 
@@ -115,7 +114,7 @@ specialty_counts <- raw_data %>%
         sort = TRUE)
 
 # number of unique specialties
-cat("Number of distinct specialties: ", n_distinct(raw_data$medical_specialty))
+cat("Number of distinct medical specialties: ", n_distinct(raw_data$medical_specialty))
 
 # top 5 most specialties
 cat("\nTop 5 most common specialties: ")
@@ -127,7 +126,7 @@ ggplot(specialty_counts,
        aes(x = reorder(medical_specialty, n),
            y = n)) +
   geom_col() +
-  coord_flip() +
+  coord_flip() + # there's a lot of specialties so I decided horizontal looks better than vertical
   labs(
     title = "Number of transcripts by medical specialty",
     x = "Medical Specialty",
@@ -228,9 +227,7 @@ filtered_data |>
 
 ### Question 2
 
-**Q2 (3 marks):** Write a regular expression to find temperature measurements
-in clinical text (e.g., "98.6 F", "37.2°C", "temperature of 38.1", "afebrile").
-Report how many notes in each specialty contain at least one temperature mention. 
+**Q2 (3 marks):** Write a regular expression to find temperature measurements in clinical text (e.g., "98.6 F", "37.2°C", "temperature of 38.1", "afebrile"). Report how many notes in each specialty contain at least one temperature mention. 
 
 Regex builders like [this website](https://spannbaueradam.shinyapps.io/r_regex_tester/) can make it a lot quicker to iterate and improve your regular expressions!
 
@@ -262,7 +259,7 @@ filtered_data %>%
   mutate(temp_match = str_extract(transcription, regex(temp_pattern, ignore_case = TRUE))) %>%
   filter(!is.na(temp_match)) %>%
   select(note_id, medical_specialty, temp_match) %>%
-  head(10)
+  tail(10)
 ```
 
 ---
@@ -326,7 +323,6 @@ ggplot(lexicon_counts,
        aes(x = reorder(lexicon, n_words),
            y = n_words)) +
   geom_col() +
-  coord_flip() +
   labs(
     title = "Number of unique stop words per lexicon",
     x = "Lexicon",
@@ -337,10 +333,7 @@ ggplot(lexicon_counts,
 
 ### Question 4
 
-**Q4 (2 marks):** How many *unique* unigrams (distinct words) are there in total across all the
-cleaned and tokenised transcriptions for each specialty? Which specialty has the largest
-vocabulary and which the smallest? Complete the code below, then provide a
-1-2 sentence interpretation of the output. 
+**Q4 (2 marks):** How many *unique* unigrams (distinct words) are there in total across all the cleaned and tokenised transcriptions for each specialty? Which specialty has the largest vocabulary and which the smallest? Complete the code below, then provide a 1-2 sentence interpretation of the output. 
 
 ```{r q4}
 ## Uncomment and complete this pipeline-fill in the blank inside n_distinct()
@@ -356,8 +349,7 @@ tokenised_data |>
     summarise(mean_unique_words = mean(unique_words))
 ```
 
-Orthopedic notes have the largest overall vocabulary, with 7,692 unique words, while radiology notes contained the smallest vocabulary, with 5,971 unique words. However, neurology notes had. the highest average number of unique words per note (174.7), suggesting that individual neurology reports use more varied language than other specialties.
-
+Orthopedic notes have the largest overall vocabulary, with 7,692 unique words, while radiology notes have the smallest with 5,971 unique words. However, when looking at the average number of unique words per note, neurology notes contain the most (174.7 words per note) and radiology the fewest (105.5 words per note), suggesting that individual radiology notes use more standardized language and neurology and orthopedics use a broader and more varied vocabulary (likely due to many different diagnoses and treatments).
 
 ### Bigrams
 
@@ -413,8 +405,7 @@ sentences_data |>
 
 ### Question 6
 
-**Q6 (1 mark):** How many *unique* sentences are there in each specialty?
-Uncomment and complete the code below (replace each `___` with the correct column name):
+**Q6 (1 mark):** How many *unique* sentences are there in each specialty? Uncomment and complete the code below (replace each `___` with the correct column name):
 
 ```{r q6}
 sentences_data |>
@@ -464,11 +455,10 @@ Stemming results in fewer unique words.
 
 ### Question 8
 
-**Q8 (2 marks):** In 2-3 sentences explain why a general-purpose English lemmatizer is likely to perform poorly on medical transcription text. Give at
-least two examples of medical terms that would likely be handled incorrectly
-and describe what goes wrong.
+**Q8 (2 marks):** In 2-3 sentences explain why a general-purpose English lemmatizer is likely to perform poorly on medical transcription text. Give at least two examples of medical terms that would likely be handled incorrectly and describe what goes wrong.
 
-General-purpose English lemmatizers are not designed specifically for medical terminology, which frequently uses Latin or Greek terms, and may fail to correctly reduce the specialized words to their base forms. For example, atria and bronchi would likely not be converted to atrium and bronchus, which would cause related words to be treated as separate terms and reduce the effectiveness of text normalization for medical students.
+General-purpose English lemmatizers are not designed for medical terminology, which frequently uses Latin or Greek roots, and may therefore fail to correctly reduce specialized words to their base forms. For example, a general-purpose lemmatizer would likely treat atria and atrium as two completely unrelated words and also fail to recognize that bronchi and bronchus refer to the same anatomical structure, because the plural forms follow Latin and Greek patterns that are not present in everyday English. As a result, the same concept can end up being represented by multiple distinct tokens, which would defeat the purpose of text normalization and may distort later analyses such as topic modelling.
+
 
 ### Applying lemmatisation to the full dataset
 
@@ -525,14 +515,11 @@ specialty_tfidf |>
 
 ### Question 9
 
-**Q9 (2 marks):** Do the top TF-IDF terms make clinical sense for each specialty?
-Identify one term that surprises you from any specialty. Complete the code below by replacing
-`"your_term_here"` with that term to pull an example transcription containing
-it, then briefly explain its clinical context.
+**Q9 (2 marks):** Do the top TF-IDF terms make clinical sense for each specialty? Identify one term that surprises you from any specialty. Complete the code below by replacing `"your_term_here"` with that term to pull an example transcription containing it, then briefly explain its clinical context.
 
-The TF-IDF terms make clinical sense because the highest-ranked terms reflect concepts that are particularly important within each specialty. Orthopedic notes contain terms related to bones, joints, and surgical procedures, while radiology notes emphasize imagining findings and diagnostic interpretation. Neurology notes contain terms associated with the brain, nervous system, and neurological conditions.
+The TF-IDF terms make clinical sense because the highest-ranked terms reflect concepts that are particularly important within each specialty. Orthopedic notes contain terms related to bones, joints, and surgical procedures, while radiology notes emphasize imaging findings and diagnostic interpretation. Neurology notes contain terms associated with the brain, nervous system, and neurological conditions.
 
-One term that initially surprised me was "stealth" in the neurology specialty, as it does not appear to be a medical term. However, reviewing the source note revealed that it referred to a surgical navigation system used during neurosurgical procedures. According to [Medtronic](https://www.medtronic.com/en-us/healthcare-professionals/products/surgical-navigation-imaging/surgical-navigation-systems/stealthstation-s8-navigation-platform.html), it is a system used to help track and guide tools during spinal and cranial surgical procedures.
+One term that initially surprised me was "stealth" in the neurology specialty, as it does not appear to be a medical term. However, reviewing an example transcription  revealed that it refers to a surgical navigation system known as the Stealth System, used during neurosurgical procedures. According to [Medtronic](https://www.medtronic.com/en-us/healthcare-professionals/products/surgical-navigation-imaging/surgical-navigation-systems/stealthstation-s8-navigation-platform.html), it is a system used to help track and guide tools during spinal and cranial surgical procedures.
 
 ```{r q9}
 filtered_data |>
@@ -583,12 +570,9 @@ ggplot(specialty_props |> filter(proportion > 0, Orthopedic > 0),
 
 ### Question 10
 
-**Q10 (2 marks):** What does this plot tell you about the lexical similarity
-between Orthopedic and Neurology compared with Orthopedic and Radiology? Is
-this what you would expect given the clinical roles of each specialty? Justify
-your answer in 2-4 sentences.
+**Q10 (2 marks):** What does this plot tell you about the lexical similarity between Orthopedic and Neurology compared with Orthopedic and Radiology? Is this what you would expect given the clinical roles of each specialty? Justify your answer in 2-4 sentences.
 
-The plot shows that orthopedic and neurology share more words with similar frequencies, as many points lie closer to the diagonal line, then orthopedic and radiology do. Orthopedic and neurology show greater separation, with more words appearing far from the diagonal. This may be partly because orthopedic and neurology have larger vocabularies than radiology, creating more opportunities for overlapping terminology. However, the pattern is also likely driven by the fact that both specialties talk about anatomical structure and symptoms/clinical findings, whereas radiology uses a more specialized vocabulary focused on imaging procedures and interpretations.
+The plot shows that orthopedic and neurology notes are more lexically similar to each other than orthopedic and radiology notes are, with more words falling close to the diagonal line in the neurology comparison panel, indicating that those words are used at similar rates in both specialties. This is clinically expected as both orthopedics and neurology produce detailed narrative clinical notes that describe anatomical structure and symptoms/clinical findings, whereas radiology uses a more specialized vocabulary focused on imaging procedures and interpretations. This may also be partily because orthopedic and neurology have larger vocabularies than radiology, creating more opportunities for overlapping terminology. 
 
 ---
 
@@ -677,11 +661,7 @@ lda_beta |>
 
 ### Question 11
 
-**Q11 (2 marks):** Based on the top words in the β plot, give each topic a brief
-descriptive clinical label (e.g., "imaging", "musculoskeletal", "neurological").
-Which topic do you think corresponds most closely to which specialty, and why?
-Does the vocabulary in each topic match your expectations from the TF-IDF
-results in Section 6?
+**Q11 (2 marks):** Based on the top words in the β plot, give each topic a brief descriptive clinical label (e.g., "imaging", "musculoskeletal", "neurological"). Which topic do you think corresponds most closely to which specialty, and why? Does the vocabulary in each topic match your expectations from the TF-IDF results in Section 6?
 
 Topic 1 can be labeled as "imaging", topic 2 can be labelled "neurological", and topic 3 can be labeled "musculoskeletal". Topic 1 most likely corresponds most closely to radiology because it contains terms such as "CT", "mass", "tumor", "lesion", "negative", and "unremarkable", which are words that are most likely used in imaging reports. Topic 2 likely corresponds most closely to neurology because it contains terms such as "cervical", "spine", "cord", "root", and "canal", which are words associated with the nervous system and spinal cord. Topic 3 corresponds most closely to orthopedics because it contains terms such as "tendon", "knee", "joint", "fracture", "foot", and "ligament", which are terms associated with the musculoskeletal system (orthopedics focus).
 
@@ -721,17 +701,11 @@ lda_gamma_specialty |>
 
 **Q12 (3 marks):**
 
-(a) Based on the γ plot, which specialty has the clearest dominant topic (i.e.,
-one topic has a noticeably higher mean γ than the others for that specialty)?
-Does this align with the clinical label you assigned to that topic in Q11?
+(a) Based on the γ plot, which specialty has the clearest dominant topic (i.e., one topic has a noticeably higher mean γ than the others for that specialty)? Does this align with the clinical label you assigned to that topic in Q11?
 
-The gamma plot shows that topic 1 is the dominant topic for neurology and radiology, accounting for approximately 81% and 73% of their average topic proportions, respectively. In contrast, topic 3 is the dominant topic in orthopedic, accounting for approximately 57% of the average topic proportion. Topic 2 contributes a smaller proportion across all three specialties and appears to present a potential secondary theme instead of the primary focus of any specialty.
+The gamma plot shows that neurology has the clearest dominant topic, with approximately 81% of its mean topic proportion attributed to topic 1 (imaging). This aligns with the clinical label assigned in Q11, as neurological diagnosis and management frequently involves the use of brain imaging such as CT scans, explaining why neurology notes share vocabulary with radiology. Radiology also has a majority of its mean topic proportion attributed to topic 1 (approximately 73%), which makes sense given that imaging terminology would define the specialty. Orthopedic notes are most clearly associated with topic 3 (musculoskeletal), accounting for approximately 57% of its average topic proportion, consistent with the bone, joint, and surgical vocabulary identified in the beta plot. Topic 2 (neurological) contributes a smaller proportion across all three specialties and does not dominate any single specialty, suggesting it represents a secondary theme that is present in multiple not types instead of a single defining characteristic of one.
 
-This interpretation is fairly consistent with the beta plot. Topic 3 contains musculoskeletal terms such as "tendon", "knee", "joint", "fracture", "foot", and "ligament", which are most specific to orthopedic notes. Topic 2 contains spinal and neurological terms such as "cervical", "spine", "cord", "root", and "canal", while topic 1 contains imagining-related terms such as "CT", "mass", "tumor", "lesion", "negative", and "unremarkable". The overlap between neurology and radiology in topic 1 most likely reflects the frequent use of imaging in the diagnosis and evaluation of multiple neurological conditions.
-
-(b) Uncomment and complete the code below to compute, for each specialty, the single topic
-with the highest mean γ. Replace each `___` with the correct column name or
-expression.
+(b) Uncomment and complete the code below to compute, for each specialty, the single topic with the highest mean γ. Replace each `___` with the correct column name or expression.
 
 ```{r q12b}
 lda_gamma_specialty |>
@@ -741,12 +715,9 @@ lda_gamma_specialty |>
   slice_max(mean_gamma, n = 1)
 ```
 
-(c) Sun et al. (2024) ran LDA on social work notes *without knowing in advance*
-what topics would emerge. How does their situation differ from this exercise,
-where we set `k = 3` to match three known specialties? What does this suggest
-about how to choose the number of topics *k* in a real exploratory analysis?
+(c) Sun et al. (2024) ran LDA on social work notes *without knowing in advance* what topics would emerge. How does their situation differ from this exercise, where we set `k = 3` to match three known specialties? What does this suggest about how to choose the number of topics *k* in a real exploratory analysis?
 
-Unlike this exercise, where the number of topics was fixed at three because the specialties were already known, Sun et al. (2024) determined the optimal number of topics experimentally. They evaluated multiple values of K and selected the solution that balanced high topic coherence with low topic similarity, producing topics that were both interpretable and non-redundant.
+Unlike this exercise, where the number of topics was fixed at three because the specialties were already known, Sun et al. (2024) determined the optimal number of topics experimentally by evaluating models across a range of K values from 10 to 50. They selected the solution that best balanced high topic coherence with low topic similarity, ensuring that the resulting topics were both interpretable and not redundant. This suggests that in a real exploratory analysis where the number of underlying themes is unknown, researchers should evaluate multiple values of K using coherence and similarity metrics instead of fixing K based on assumptions about the data.
 
 ---
 
@@ -789,28 +760,24 @@ lda_gamma_specialty |>
 
 ### Question 13
 
-**Q13 (3 marks):** Copy the transcription above into Microsoft Copilot and use
-the following prompt:
+**Q13 (3 marks):** Copy the transcription above into Microsoft Copilot and use the following prompt:
 
 > *"I will give you a medical transcription. Classify it as exactly one of:
 > Orthopedic, Radiology, or Neurology. Think step by step and explain your
 > reasoning before giving your final answer. Transcription: [paste text here]"*
 
-(a) What specialty did the LLM predict, and was it correct? Does it match the
-topic with the highest γ from the LDA model above?
+(a) What specialty did the LLM predict, and was it correct? Does it match the topic with the highest γ from the LDA model above?
 
 Microsoft Copilot correctly classified the not as orthopedic, matching both the true label and tbe LDA model's assignment, the note had a gamma of approximately 1.0 for topic 3, the musculoskeletal/orthopedic topic.
 
-(b) What specific features of the text did the LLM cite to justify its
-classification?
+(b) What specific features of the text did the LLM cite to justify its classification?
 
 The LLM cited the surgical procedures (bunionectomy, arthrodesis, hammertoe repair, extensor tenotomy and capsulotomy), musculoskeletal conditions (degenerative joint disease and rheumatoid arthritis affecting the foot), which it explained would need to be treated with orthopedic surgery instead of imaging or neurology.
 
-(c) Compare LLM's explanation-based classification with LDA's unsupervised
-topic assignment. Which approach would you prefer for classifying a large batch
-of new clinical notes, and why? 
+(c) Compare LLM's explanation-based classification with LDA's unsupervised topic assignment. Which approach would you prefer for classifying a large batch of new clinical notes, and why? 
 
-For classifying a large batch of clinical notes, I would generally prefer the LLM approach for classification because it can use contextual information and medical knowledge to explain its predictions, whereas the LDA identified patterns of word co-occurence without understanding their clinical meaning.
+For classifying a large batch of new clinical notes, the best choice on which approach to use depends on the priorities of the analysis. The LLM approach offers better interpretability, as it can use contextual medical knowledge to explain its predictions instead of relying purely on patterns of words co-occuring together. LDA on the other hand, is more practical at a large scale, as it runs locally with no API costs and doesn't require patient data to be sent to an external service, which can be a major privacy concern with training an LLM on patient data. I would choose the LDA, as it is far more practical for processing large volumes of notes efficiently without API costs or raising data privacy concerns associated with sending clinical records to an external company.
+
 
 ---
 
@@ -818,24 +785,17 @@ For classifying a large batch of clinical notes, I would generally prefer the LL
 
 ### Question 14
 
-**Q14 (1 mark):** Sun et al. (2024) applied LDA topic modelling
-to clinical social work notes to explore SDoH factors. Name two of the
-SDoH-related topics they identified and state the name of the metric they used
-to evaluate topic quality (hint: it measures the coherence of the top words
-within a topic).
+**Q14 (1 mark):** Sun et al. (2024) applied LDA topic modelling to clinical social work notes to explore SDoH factors. Name two of the SDoH-related topics they identified and state the name of the metric they used to evaluate topic quality (hint: it measures the coherence of the top words within a topic).
 
-Two SDoH-related topics identified by Sun et al., were Metal Health (characterized by terms such as depression, anxiety, mood, therapy, and psychological) and Abuse History (characterized by terms such as abuse, addiction, alcohol, substances, and violence). The metric they used to evaluate topic quality was topic coherence, which quantifies the semantic similarity between highest-scoing words within a topic by uising normalized point wise mutual information and cosine similarity, helping to distinguish between topics that are genuinely interpretable and those that are artefacts of statistical interference.
+Two SDoH-related topics identified by Sun et al., were Social Support and Abuse History. The metric they used to evaluate topic quality was Topic Coherence, which quantifies the semantic similarity between highest-scoring words in a topic.
 
 ### Question 15
 
-**Q15 (1 mark):** Chung et al. (2024) tested GPT-4 Turbo on both
-classification and numerical prediction tasks. Name one task where the LLM
-performed well (give the F1 score) and one where it failed to beat a simple
-baseline (give the MAE and the baseline value for comparison).
+**Q15 (1 mark):** Chung et al. (2024) tested GPT-4 Turbo on both classification and numerical prediction tasks. Name one task where the LLM performed well (give the F1 score) and one where it failed to beat a simple baseline (give the MAE and the baseline value for comparison).
 
-One task where GPT-4 Turbo performed well was hospital mortality prediction, where the best prompt strategy (10-shot or 20-shot without chain-of-thought) achieved an F1 score of 0.86, which was 1.76 times greater than the random classifier baseline F1 of 0.49. 
+One task where GPT-4 Turbo performed well was hospital mortality prediction, where the best prompt strategy (10-shot or 20-shot) achieved an F1 score of 0.86, which was 1.76 times better than the random classifier baseline F1 of 0.49. 
 
-One task where the LLM failed to beat a simlpe baseline was PACU phase 1 duration prediction, where the best prompt strategy (zero-shot using original notes) achieved an MAE of 49 minutes, which was actually worse than the dummy regressor baseline MAE of 36 minutes, meaning the LLM prefornmed 36% worse than simply predicting the mean value, demonstrating that GPT-4 Turbo struggles substaintially with numerical regression tasks in the perioperative setting.
+One task where the LLM failed to beat a simple baseline was PACU phase 1 duration prediction, where the best prompt strategy (zero-shot using original notes) had an MAE of 49 minutes, which was actually worse than the dummy regressor baseline MAE of 36 minutes, meaning the LLM performed 36% worse than simply predicting the mean value.
 
 ---
 
