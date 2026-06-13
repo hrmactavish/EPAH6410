@@ -92,7 +92,7 @@ knitr::kable(variable_table)
 
 **Q1b (2 marks):** What sort of information are you missing about how this dataset was created that could be important to your analyses?
 
-Several pieces of information are missing about how this dataset was created. It is unclear how the notes were sampled (e.g., randomly sampled or by convenience), which matters because non-random sampling could mean certain note types or patient presentations could be over- or under-represented, potentially biasing any patterns. The healthcare setting is also unknown (e.g., inpatient hospital, outpatient clinic), which is importnat because clinical language and documentation styles can vary across different settings. The time period of collection is also missing, which matters because medical terminology and practices can change over time.
+Several pieces of information are missing about how this dataset was created. It is unclear how the notes were sampled (e.g., randomly sampled or by convenience), which matters because non-random sampling could mean certain note types or patient presentations could be over- or under-represented, potentially biasing any patterns. The healthcare setting is also unknown (e.g., inpatient hospital, outpatient clinic), which is important because clinical language and documentation styles can vary across different settings. The time period of collection is also missing, which matters because medical terminology and practices can change over time.
 
 **Q1c (2 marks):** How many distinct medical specialties are represented?  What are the most common 5? Create a ggplot bar graph showing how many transcripts come from each specialty.  
 
