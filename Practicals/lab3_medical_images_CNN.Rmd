@@ -603,10 +603,10 @@ luz::get_metrics(fitted_tl) |>
 **Q9 (2 marks):** What is ImageNet, and why would convolution and pooling layers learnt on photos of cats, cars
 and mushrooms improve our ability to predict DR from CFP images (none of which are in the ImageNet dataset)?
 
-ImageNet is a dataset with 14,197,122 images  with 21841 synsets used to train AI models. A CCNN trained on ImageNet learns important visual rules such as edges, lines, and curves. Using transfer learning, the model can reuse the pre-learned visual feature detectors instead of learning them from scratch using the limited retinal image dataset. This allows the model to learn more efficiently and reduce overfitting, despite having a limited amount of data to train from. 
+ImageNet is a dataset with 14,197,122 images  with 21841 synsets widely used to train AI models. A CNN trained on ImageNet learns important and general-purpose visual rules such as edges, lines,  curves, and shapes, in the layers. 
 
+Through transfer learning, these pre-learned feature detectors can be reused for the retinal imaging, instead of being learned from scratch on a limited dataset. This allows the model to learn more efficiently from millions of diverse images, improving its ability to identify relevant patterns in the photographs while reducing the risk of overfitting to the small training set.
 
-!!!!!!!!
 
 ## 7 Evaluating Like a Clinician
 
