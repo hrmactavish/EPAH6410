@@ -1,6 +1,6 @@
 ---
 title: "Practical 3 - Medical Imaging: Detecting Diabetic Retinopathy with CNNs"
-author: "REPLACE WITH YOUR NAME"
+author: "Heather MacTavish"
 date: "`r format(Sys.Date(), '%Y-%m-%d')`"
 output:
   html_document:
@@ -195,7 +195,11 @@ A screening tool might prefer to err towards over-referral because missing a pat
 **Q2 (2 marks):** Based on `glimpse()` and the data dictionary above, what information about
 how these images were captured is **missing** that could matter for an analysis? Give two examples and say why each matters.
 
-1. 
+Two things that were not included that would be important to the analysis are the camera model and image settings/protocol and image quality score.
+
+Camera model and image settings/protocol would be important to include because different cameras can produce images with different resolutions, colour balances, fields of view, and image quality. If the model is trained on images that come from a specific camera type, it might learn differences in the features of the camera and perform poorly when applied to images that are from another model.
+
+The image quality would be important to know because if there are images with poor focus, improper lighting, or something such as cataracts could make the model associate lower quality images with a certain grade.
 
 
 !!!!!!!!!
@@ -221,6 +225,10 @@ labels |>
 
 **Q3 (1 marks):** What sort of ML issues may arise with a dataset that has this sort of label/class balance?
 
+The dataset shows a *moderate* class imbalance, with more Healthy images than Severe DR images, approximately a 3:1 imbalance. This may cause the model to bias towards predicting Healthy (the majority class) because it could achieve around 75% accuracy by predicting Healthy every single time, which makes accuracy a misleading, metric.s
+
+!!!!!!!
+
 ### 2.4 Look at the images
 
 It is *always* worth looking directly at the raw data before modelling. Each time you re-run this block you will get a different random sample of images.
@@ -243,6 +251,13 @@ gridExtra::grid.arrange(grobs = plots, nrow = 2, ncol = 3)
 
 **Q4 (3 marks):** Looking at these images, identify **two** properties that vary between
 photographs of the same class that we may want to normalise/process before training?  Can you see any consistent differences between Grade 4 and Grade 0 photographs? (Rerun the code-block a few times to get different images).
+
+Two properties that vary within the same class are the brightness of the images and the orientation/positioning of the image. The images vary in brightness and colour tone, likely because of differences in camera settings/models. The optic disc is in slightly different locations between images, and some images are more zoomed in than others.
+
+There appears to be some differences between the grades. Grade 4 images tend to have visible signs of damage such as the exudates and haemorrhagic patches, as well as some abnormal tissue growth on certain eyes. Grade 0 seem to mostly be uniform in retinal appearance with no lesions or strange looking vessels. There is some overlap between more clean looking Grade 4 eyes and Grade 0 eyes however.
+
+!!!!!!!
+
 
 ---
 
@@ -322,10 +337,20 @@ dim(one_batch$x)   # expect: batch_size x 3 x 224 x 224
 **Q5 (2 marks):** Explain what each of the four numbers in the batch dimension means. Why is
 the channel dimension `3` here? If, instead of CFP images, we were using a 3D MRI grayscale image that was 1000 pixels/voxels in each dimension, what would be the dimensions output by the above command?
 
+The 16 is the batch size (number of images in the batch), the 3 represents the number of colour channels (3 for red, green, blue) and 224s are the height and width of the picture in pixels. There is a 3 in channel dimension because the pictures are standard colour pictures which use RGB colours to make the colours in each pixel.
+
+If the CFP images were using a 3d MRI grayscale image that was 1000 pixels/voxels in each dimension, the dimensions would be: 16 x 1 x 1000 x 1000 x 1000. Where there is 1 channel because its grayscale and 3 spatial dimensions because it's 3D.
+
+!!!!!!
+
 ### Question 6
 
 **Q6 (1 marks):** If we didn't want to use pre-trained ImageNet networks then we would still probably want to normalise the intensities in our dataset.  What issue might we cause if we normalised using the mean and standard deviation of the pixel intensities across the *whole* dataset (i.e., train, test, and validate combined)?
 
+Normalizing using the mean and standard deviation calculated from the entire dataset would introduce data leakage, where the information would be leaked into the preprocessing stage, which can lead to very good performance estimates because it would be tuned with every set and it would reduce the validity of the model evaluation. The normalization statistics should be calculated using the training set and then be applied to the test and validation sets.
+
+
+!!!!!! 
 ---
 
 ## 4 A CNN from Scratch
@@ -391,7 +416,8 @@ simple_cnn <- nn_module(
     )
     self$classifier <- nn_sequential(
       nn_dropout(p = 0.5),
-      nn_linear(64, 2)                  # 2 logistic functions to get the probability of grade 0 and grade 4
+      nn_linear(64, 2)                  # 2 logistic functions to get the 
+                                        # probability of grade 0 and grade 4
     )
   },
   forward = function(x) {
