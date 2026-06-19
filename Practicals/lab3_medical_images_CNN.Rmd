@@ -329,20 +329,16 @@ dim(one_batch$x)   # expect: batch_size x 3 x 224 x 224
 **Q5 (2 marks):** Explain what each of the four numbers in the batch dimension means. Why is
 the channel dimension `3` here? If, instead of CFP images, we were using a 3D MRI grayscale image that was 1000 pixels/voxels in each dimension, what would be the dimensions output by the above command?
 
-The 16 is the batch size (number of images in the batch), the 3 represents the number of colour channels (3 for red, green, blue) and 224s are the height and width of the picture in pixels. There is a 3 in channel dimension because the pictures are standard colour pictures which use RGB colours to make the colours in each pixel.
+The four numbers represent the batch size (16 images processed together), the number of colour channels (3, for red, green, blue) , and the height and width of each image in pixels (224 x 224). The channel dimension is 3 because the photographs are standard colour images encoded in RGB.
 
-If the CFP images were using a 3d MRI grayscale image that was 1000 pixels/voxels in each dimension, the dimensions would be: 16 x 1 x 1000 x 1000 x 1000. Where there is 1 channel because its grayscale and 3 spatial dimensions because it's 3D.
-
-!!!!!!
+If the CFP images were using a 3D MRI grayscale image that was 1000 pixels/voxels in each dimension, the dimensions would be: 16 x 1 x 1000 x 1000 x 1000, reflecting one channel (grayscale) and three spatial dimensions (3D).
 
 ### Question 6
 
 **Q6 (1 marks):** If we didn't want to use pre-trained ImageNet networks then we would still probably want to normalise the intensities in our dataset.  What issue might we cause if we normalised using the mean and standard deviation of the pixel intensities across the *whole* dataset (i.e., train, test, and validate combined)?
 
-Normalizing using the mean and standard deviation calculated from the entire dataset would introduce data leakage, where the information would be leaked into the preprocessing stage, which can lead to very good performance estimates because it would be tuned with every set and it would reduce the validity of the model evaluation. The normalization statistics should be calculated using the training set and then be applied to the test and validation sets.
+Normalizing using statistics calculated from the entire dataset, including the validation and test sets, would introduce data leakage. Information from the held-out sets would influence the preprocessing step, which can produce inflated performance estimates because the normalization is accidentally tuned to the data used to estimate it. This is why normalization should be done on the training set and then applied to the test and validation sets.
 
-
-!!!!!! 
 ---
 
 ## 4 A CNN from Scratch
