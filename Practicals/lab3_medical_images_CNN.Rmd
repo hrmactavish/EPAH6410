@@ -221,9 +221,7 @@ labels |>
 
 **Q3 (1 marks):** What sort of ML issues may arise with a dataset that has this sort of label/class balance?
 
-The dataset shows a *moderate* class imbalance, with more Healthy images than Severe DR images, approximately a 3:1 imbalance. This may cause the model to bias towards predicting Healthy (the majority class) because it could achieve around 75% accuracy by predicting Healthy every single time, which makes accuracy a misleading, metric.s
-
-!!!!!!!
+The dataset shows a moderate class imbalance, with approximately three times as many Healthy images as Severe DR images. This can cause a model to become biased towards predicting the majority class (Healthy), because it could achieve close to 75% accuracy by always predicting the eye is Healthy.
 
 ### 2.4 Look at the images
 
@@ -248,11 +246,9 @@ gridExtra::grid.arrange(grobs = plots, nrow = 2, ncol = 3)
 **Q4 (3 marks):** Looking at these images, identify **two** properties that vary between
 photographs of the same class that we may want to normalise/process before training?  Can you see any consistent differences between Grade 4 and Grade 0 photographs? (Rerun the code-block a few times to get different images).
 
-Two properties that vary within the same class are the brightness of the images and the orientation/positioning of the image. The images vary in brightness and colour tone, likely because of differences in camera settings/models. The optic disc is in slightly different locations between images, and some images are more zoomed in than others.
+Two properties that vary within the same class are image brightness and the orientation or positioning of the optic disc within the frame. The images vary in brightness and colour tone, likely due to differences in camera models or settings, and the optic disc appears in slightly different locations across images, with some photographs appearing more zoomed in than others.
 
-There appears to be some differences between the grades. Grade 4 images tend to have visible signs of damage such as the exudates and haemorrhagic patches, as well as some abnormal tissue growth on certain eyes. Grade 0 seem to mostly be uniform in retinal appearance with no lesions or strange looking vessels. There is some overlap between more clean looking Grade 4 eyes and Grade 0 eyes however.
-
-!!!!!!!
+There do appear to be some differences between the grades. Grade 4 images tend to have visible signs of damage such as the exudates and haemorrhagic patches, and some eyes display abnormal tissue growth. Grade 0 images appear largely uniform in retinal appearance, with no visible lesions or unusual looking vessels. There is some overlap between clearer-looking Grade 4 eyes and Grade 0 eyes, making the distinction not always obvious.
 
 
 ---
