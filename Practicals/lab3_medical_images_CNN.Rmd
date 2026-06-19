@@ -455,6 +455,11 @@ luz::get_metrics(fitted_scratch) |>
 **Q7 (2 marks):** Look at the validation accuracy and loss across epochs. Do you think small network is actually
 *learning* to separate referable from non-referable eyes, why or why not? 
 
+
+I don't think the network is actually meaningfully learning to separate the two classes. The validation accuracy is completely flat at approximately 70.9% across all five epochs, which is very similar to the expected accuracy if the model only predicted healthy given the class imbalance of approximately 3:1 mentioned in question 3. While the validation loss does decrease slightly from approximately 0.560 to 0.530, it is never reflected in the accuracy, suggesting that the model is becoming more confident in its predictions that are already correct, instead of actually learning how to properly classify. The training accuracy also plateaus at approximately 73.2% after the first epoch and remains unchanged, which further supports the idea that the model was stalled in its learning ability.
+
+!!!!!!
+
 ## 5 Data Augmentation
 
 When real training data is scarce, **augmentation** synthesises plausible new examples by
@@ -500,6 +505,12 @@ train_transform <- function(path) {
 
 **Q8a (2 marks):** These augmentations have some real potential drawbacks especially with data from eyes! Explain why flipping an eye horizontally may be misleading in this context then copy the above code to create a new augmentation pipeline `train_transform_fixed` which removes the horizontal flip and adds
 a *small random rotation* (`transform_random_rotation(degrees = ...)`). (Hint: use `?transform_random_rotation` to figure out the parameters for this function).
+
+Horizontally flipping an eye is misleading because the left and right eyes are mirror images of each other, so flipping a left eye makes it look like a right eye. However, each person has a fixed left and right eye with a specific arrangement of structures. The model could therefore be trained on images that are not actually anatomically possible images, potentially learning incorrect spatial arrangements. Random rotation is more appropriate since the photographs can be captured at slightly different angles depending on how the patient is positioned.
+
+!!!!!!
+
+
 
 ```{r q8-augment}
 ## Uncomment, complete the rotation, and rebuild the augmented training dataloader.
@@ -553,6 +564,10 @@ bind_rows(
 **Q8b (2 marks):** Compare the validation curves of the augmented and un-augmented runs of the
 *same* network. Did augmentation help, hurt, or make little difference here, and why might that
 be the case for a dataset and network of this size?
+
+Augmentation made basically no difference in validation accuracy, both runs are flat at approximately 71% across all five epochs. The augmented run does reach a slightly lower validation loss by epoch four (~0.53 to ~0.50), but it doesn't translate to the classification accuracy. The lack of major improvement from the augmentation is likely due to the small dataset size, small validation set, and simple CNN.
+
+!!!!!!
 
 ## 6 Transfer Learning
 
@@ -608,6 +623,11 @@ luz::get_metrics(fitted_tl) |>
 **Q9 (2 marks):** What is ImageNet, and why would convolution and pooling layers learnt on photos of cats, cars
 and mushrooms improve our ability to predict DR from CFP images (none of which are in the ImageNet dataset)?
 
+ImageNet is a dataset with 14,197,122 images  with 21841 synsets used to train AI models. A CCNN trained on ImageNet learns important visual rules such as edges, lines, and curves. Using transfer learning, the model can reuse the pre-learned visual feature detectors instead of learning them from scratch using the limited retinal image dataset. This allows the model to learn more efficiently and reduce overfitting, despite having a limited amount of data to train from. 
+
+
+!!!!!!!!
+
 ## 7 Evaluating Like a Clinician
 
 Accuracy is misleading under class imbalance (Lab 1... may help with an earlier question in this lab...). Clinically, and in both papers, models are judged on the **ROC curve**, the **AUC**, and a choice of **operating point** trading off
@@ -642,6 +662,17 @@ et al. reported one tuned for **high specificity** and one for **high sensitivit
 
 **Q10 (2 marks):** Define sensitivity and specificity and explain how there is usual a trade-off between them.  Which is more important in clinical screening program? Approximated using this ROC curve (dark line in plot above - just eyeball the value using the plot), how much specificity would you lose if you wanted perfect sensitivity? Similarly, how bad would the sensitivity be with perfect specificity? 
 
+Sensitivity is the proportion of true positive cases that are correctly identified as positive cases by the screening test (the true positive rate). Specificity is the proportion of true negative cases (individuals without the disease) identified as not having the disease (true negative rate). 
+
+There is usually a trade-off between sensitivity and specificity because lowering the classification threshold causes more patients to be labelled as positive. This increases the sensitivity because more cases are identified, but it also increases the number of false positives, which reduces the specificity. The reverse effect occurs when the threshold is raised (less false positives but more missed cases).
+
+In a clinical screening program, sensitivity would be more important because missing a patient with a disease can delay diagnois and treatment and result in longterm consequences that could have been prevented if it was caught earlier (such as blindness from severe DR). Avoiding false positives would be beneficial, but they would usually be less harmful than false negatives, because positive screens can be followed up with more assessments.
+
+Based on the ROC curve, achieving approximately 100% sensitivity would require a false positive rate of approximately 47%, so the sensitivity would be approximately 53%. Therefore, about half of the healthy patients would be incorrectly referred. Achieving approximately 100% specificity would result in a sensitivity of approximately 33%, meaning that around 67% of all referrable DR cases would be missed.
+
+
+!!!!!
+
 ## 8 Interpretability and Clinical Translation
 
 Good performance metrics are necessary but nowhere near sufficient for clinical use.
@@ -656,13 +687,23 @@ Unfortunately, these sort of analysis methods proved a little too challenging to
 
 **Q11 (1 marks):** Why is an attribution/saliency map more convincing evidence than test
 accuracy/sensitivity/specificity alone when arguing a model is clinically trustworthy? Give one way a model could
-achieve high performance metrics for the *wrong* reason that an attribution map might expose
+achieve high performance metrics for the *wrong* reason that an attribution map might expose.
+
+A model could achieve high sensitivity and AUC by learning a false pattern that isn't actually related to the disease, for example, it might learn that images from a specific hospital's camera (which happened to have more people with severe DR cases) have a specific zoom or colour to tem, and classify based on that rather tahn the actual signs of referrable DR in the retina. There would be good test metrics, but then the model would fail on images that are from a different camera. An attribution map showing the model's attention concentrated on things from the images that are clincially meaningless (such as borders or the optic disc instead of haemorrhages or exudates) would immediately show that this is occuring.
+
+!!!!!!!
+
 
 ### Question 12
 
 **Q12 (1 marks):** Gulshan et al. validated on **two** datasets, including the publicly
 available Messidor-2 (a *different* country, cameras and protocol). Why is this kind of
 *external* validation so much stronger evidence than a held-out split of the same data? 
+
+A held-out split of the same dataset shares the same camera, graders, patient population, protocol, and any underlying biases in how the images were collected or labelled. The model did not see those specific images, but it will be very similar to the ones it has already trained on. External validation on a dataset from a different country with different cameras and protocols is a better way to test generalizability/if the model learned based on actual pathology instead of image artefacts. It is a much stronger test and much closer to what the model would face if it were actually deployed across diverse real-world clinical settings.
+
+
+!!!!!!!!!
 
 ## 9 Reproducibility
 
