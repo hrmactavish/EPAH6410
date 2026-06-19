@@ -181,13 +181,13 @@ screening tool prefer to err towards over-referral? *(Hint: see the opening para
 Gulshan et al.)*
 
 
-Diabetic retinopathy (DR) is a complication of diabetes where blood vessels in the retina are damaged, which can lead to vision loss or blindness if it is not treated. 
+Diabetic retinopathy (DR) is a complication of diabetes where blood vessels in the retina are damaged, which can lead to vision loss or blindness if left untreated. 
 
-Referable DR refers to moderate or more severe DR or diabetic macular edema, where patients are recommended closer follow-up or referral to an ophthalmologist instead of annual screening.
+Referable DR refers to moderate or more severe DR or diabetic macular edema, where patients are recommended for closer follow-up or referral to an ophthalmologist instead of just annual screening.
 
-Automatically identifying referable DR from retinal photographs could improve screening efficiency, increase the access to care, and allow earlier detection and treatment of patients who are at risk of consequences of referable DR, such as vision loss.
+Automatically identifying referable DR from retinal photographs could improve screening efficiency, increase access to care, and allow earlier detection and treatment of patients who are at risk of consequences of referable DR, such as vision loss.
  
-A screening tool might prefer to err towards over-referral because missing a patient with referable DR (a false negative) could delay treatment and result in a person having vision loss when it could have been prevented. Although over-referral might result in an increase of unnecessary specialist visits, it would be less harmful then failing to identify a person who really needs treatment.
+A screening tool might prefer to err towards over-referral because missing a patient with referable DR (a false negative) could delay treatment and result in preventable blindness. Although over-referral might result in an increase of unnecessary specialist visits, it would be less harmful than failing to identify a person who genuinely requires treatment.
 
 
 ### Question 2
@@ -195,15 +195,11 @@ A screening tool might prefer to err towards over-referral because missing a pat
 **Q2 (2 marks):** Based on `glimpse()` and the data dictionary above, what information about
 how these images were captured is **missing** that could matter for an analysis? Give two examples and say why each matters.
 
-Two things that were not included that would be important to the analysis are the camera model and image settings/protocol and image quality score.
+Two pieces of information that are absent but would be important to the analysis are the camera model and imaging settings, and an image quality score.
 
-Camera model and image settings/protocol would be important to include because different cameras can produce images with different resolutions, colour balances, fields of view, and image quality. If the model is trained on images that come from a specific camera type, it might learn differences in the features of the camera and perform poorly when applied to images that are from another model.
+Camera model and imaging settings matter because different cameras can produce images with different resolutions, fields of view, colour balances, and overall image quality. If the model is trained on mostly images that come from one camera type, it might accidentally learn camera-specific features of the photographs and perform poorly when applied to images taken with a different camera.
 
-The image quality would be important to know because if there are images with poor focus, improper lighting, or something such as cataracts could make the model associate lower quality images with a certain grade.
-
-
-!!!!!!!!!
-
+Image quality is important because inadequate lighting, poor focus, or eye conditions such as cataracts can make certain details in the eye appear obscured. Without a quality score, it is difficult to know if poor model performance is from genuine difficulty classifying clear images or from low-quality images, and the model might incorrectly associate good or bad image quality with a specific grade.
 
 ### 2.3 Class balance
 
