@@ -603,9 +603,7 @@ luz::get_metrics(fitted_tl) |>
 **Q9 (2 marks):** What is ImageNet, and why would convolution and pooling layers learnt on photos of cats, cars
 and mushrooms improve our ability to predict DR from CFP images (none of which are in the ImageNet dataset)?
 
-ImageNet is a dataset with 14,197,122 images  with 21841 synsets widely used to train AI models. A CNN trained on ImageNet learns important and general-purpose visual rules such as edges, lines,  curves, and shapes, in the layers. 
-
-Through transfer learning, these pre-learned feature detectors can be reused for the retinal imaging, instead of being learned from scratch on a limited dataset. This allows the model to learn more efficiently from millions of diverse images, improving its ability to identify relevant patterns in the photographs while reducing the risk of overfitting to the small training set.
+ImageNet is a dataset with 14,197,122 images  with 21841 synsets widely used to train AI models. A CNN trained on ImageNet learns important and general-purpose visual rules such as edges, lines,  curves, and shapes, in the layers. Through transfer learning, these pre-learned feature detectors can be reused for the retinal imaging, instead of being learned from scratch on a limited dataset. This allows the model to learn more efficiently from millions of diverse images, improving its ability to identify relevant patterns in the photographs while reducing the risk of overfitting to the small training set.
 
 
 ## 7 Evaluating Like a Clinician
@@ -642,16 +640,13 @@ et al. reported one tuned for **high specificity** and one for **high sensitivit
 
 **Q10 (2 marks):** Define sensitivity and specificity and explain how there is usual a trade-off between them.  Which is more important in clinical screening program? Approximated using this ROC curve (dark line in plot above - just eyeball the value using the plot), how much specificity would you lose if you wanted perfect sensitivity? Similarly, how bad would the sensitivity be with perfect specificity? 
 
-Sensitivity is the proportion of true positive cases that are correctly identified as positive cases by the screening test (the true positive rate). Specificity is the proportion of true negative cases (individuals without the disease) identified as not having the disease (true negative rate). 
+Sensitivity is the proportion of true positive cases that are correctly identified as positive cases by the screening test (the true positive rate). Specificity is the proportion of true negative cases (individuals without the disease), correctly identified as not having the disease (true negative rate). 
 
-There is usually a trade-off between sensitivity and specificity because lowering the classification threshold causes more patients to be labelled as positive. This increases the sensitivity because more cases are identified, but it also increases the number of false positives, which reduces the specificity. The reverse effect occurs when the threshold is raised (less false positives but more missed cases).
+There is a trade-off between sensitivity and specificity because lowering the classification threshold causes more patients to be labelled as positive. This increases sensitivity by capturing more true cases, but also increases the number of false positives, resulting in a reduced specificity. The reverse effect occurs when the threshold is raised (less false positives but more missed cases).
 
-In a clinical screening program, sensitivity would be more important because missing a patient with a disease can delay diagnois and treatment and result in longterm consequences that could have been prevented if it was caught earlier (such as blindness from severe DR). Avoiding false positives would be beneficial, but they would usually be less harmful than false negatives, because positive screens can be followed up with more assessments.
+In a clinical screening program, sensitivity would be more important because missing a patient with a disease can delay diagnosis and treatment and result in serious long-term consequences that could have been prevented, such as blindness from severe DR, that might have been prevented with earlier intervention. False positives are also not desirable but typically less harmful, as positive screens can be followed up with additional assessments.
 
-Based on the ROC curve, achieving approximately 100% sensitivity would require a false positive rate of approximately 47%, so the sensitivity would be approximately 53%. Therefore, about half of the healthy patients would be incorrectly referred. Achieving approximately 100% specificity would result in a sensitivity of approximately 33%, meaning that around 67% of all referrable DR cases would be missed.
-
-
-!!!!!
+Based on the ROC curve, achieving approximately 100% sensitivity would require a false positive rate of approximately 48%, so the sensitivity would be approximately 52%. Therefore, about half of the healthy patients would be incorrectly referred. Achieving approximately 100% specificity would result in a sensitivity of approximately 33%, meaning that around 67% of all referable DR cases would be missed.
 
 ## 8 Interpretability and Clinical Translation
 
@@ -669,10 +664,7 @@ Unfortunately, these sort of analysis methods proved a little too challenging to
 accuracy/sensitivity/specificity alone when arguing a model is clinically trustworthy? Give one way a model could
 achieve high performance metrics for the *wrong* reason that an attribution map might expose.
 
-A model could achieve high sensitivity and AUC by learning a false pattern that isn't actually related to the disease, for example, it might learn that images from a specific hospital's camera (which happened to have more people with severe DR cases) have a specific zoom or colour to tem, and classify based on that rather tahn the actual signs of referrable DR in the retina. There would be good test metrics, but then the model would fail on images that are from a different camera. An attribution map showing the model's attention concentrated on things from the images that are clincially meaningless (such as borders or the optic disc instead of haemorrhages or exudates) would immediately show that this is occuring.
-
-!!!!!!!
-
+A model could achieve high sensitivity or specificity and AUC by learning a false pattern that isn't actually related to the disease. For example, it might learn that images from a specific hospital's camera, which happened to have more people with severe DR cases, have a distinct zoom or colour to them, and classify severe DR cases based on that rather than the actual signs of referable DR in the retina. This would produce strong test metrics, but the model would fail when applied to images from a different camera or setting. An attribution map showing that the model's attention is concentrated on things from the images that are clinically meaningless, such as zoomed out areas or the optic disc optic disc instead of haemorrhages or exudates or colouring, would show that this problem is occurring.
 
 ### Question 12
 
@@ -680,10 +672,7 @@ A model could achieve high sensitivity and AUC by learning a false pattern that 
 available Messidor-2 (a *different* country, cameras and protocol). Why is this kind of
 *external* validation so much stronger evidence than a held-out split of the same data? 
 
-A held-out split of the same dataset shares the same camera, graders, patient population, protocol, and any underlying biases in how the images were collected or labelled. The model did not see those specific images, but it will be very similar to the ones it has already trained on. External validation on a dataset from a different country with different cameras and protocols is a better way to test generalizability/if the model learned based on actual pathology instead of image artefacts. It is a much stronger test and much closer to what the model would face if it were actually deployed across diverse real-world clinical settings.
-
-
-!!!!!!!!!
+A held-out split of the same dataset shares the same cameras, patient population, graders,  protocol, and any biases in how the images were collected or labelled. Although the model did not train on those specific images, they are likely very similar to ones that it has already seen and trained on, especially in a small dataset. External validation on a dataset from a different country which uses different cameras and protocols is a better way to test generalizability, as it assesses whether the model learned genuine pathological features associated with severe DR rather than dataset-specific patterns. It is therefore much closer to the conditions the model would face if it was deployed across diverse real-world clinical settings.
 
 ## 9 Reproducibility
 
