@@ -181,9 +181,7 @@ screening tool prefer to err towards over-referral? *(Hint: see the opening para
 Gulshan et al.)*
 
 
-Diabetic retinopathy (DR) is a complication of diabetes where blood vessels in the retina are damaged, which can lead to vision loss or blindness if left untreated. 
-
-Referable DR refers to moderate or more severe DR or diabetic macular edema, where patients are recommended for closer follow-up or referral to an ophthalmologist instead of just annual screening.
+Diabetic retinopathy (DR) is a complication of diabetes where blood vessels in the retina are damaged, which can lead to vision loss or blindness if left untreated. Referable DR is when patients are recommended for closer follow-up or referral to an ophthalmologist instead of just annual screening.
 
 Automatically identifying referable DR from retinal photographs could improve screening efficiency, increase access to care, and allow earlier detection and treatment of patients who are at risk of consequences of referable DR, such as vision loss.
  
