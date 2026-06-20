@@ -493,13 +493,13 @@ a *small random rotation* (`transform_random_rotation(degrees = ...)`). (Hint: u
 
 Horizontally flipping a fundus image is misleading because the retina has specific and not perfectly asymmetric anatomy and it is not exactly the same in the left and right eye. A flipped image would therefore represent an image with an anatomically impossible configuration, which could cause the model to learn spatial relationships that do not actually exist in the real clinical setting. Random rotation is more appropriate since fundus photographs can naturally be captured at slightly different angles depending on how the patient is positioned, making small rotations a realistic and plausible source of variability.
 
+
 ```{r q8-augment}
 ## Uncomment, complete the rotation, and rebuild the augmented training dataloader.
-train_transform <- function(path) {
+train_transform_fixed <- function(path) {
   base_loader(path) |>
     transform_to_tensor() |>
     transform_random_resized_crop(size = c(224, 224), scale = c(0.8, 1.0)) |>
-    transform_random_horizontal_flip(p = 0.5) |>
     transform_random_rotation(degrees = c(-45, 45)) |>
     transform_color_jitter(brightness = 0.2, contrast = 0.2) |>
     transform_normalize(mean = imagenet_mean, std = imagenet_std)
@@ -509,7 +509,7 @@ train_transform <- function(path) {
 Now apply your new augmentations - this will use the incorrect augmentations if you haven't completed Q8!
 
 ```{r apply_augments}
-train_ds_aug <- fundus_dataset(train_df, train_transform)
+train_ds_aug <- fundus_dataset(train_df, train_transform_fixed)
 train_dl_aug <- dataloader(train_ds_aug, batch_size = batch_size, shuffle = TRUE)
 ```
 
@@ -546,7 +546,7 @@ bind_rows(
 *same* network. Did augmentation help, hurt, or make little difference here, and why might that
 be the case for a dataset and network of this size?
 
-Augmentation made basically no difference in validation accuracy, both runs are flat at approximately 71% across all five epochs. The augmented run did reach a slightly lower validation loss by epoch four (~0.53 to ~0.50), but it did not translate to the classification accuracy. The lack of meaningful improvement from the augmentation is likely due to the small dataset size, the limited ability of a simple CNN, and small validation set, all of which constrain how much any single training modification can improve the performance.
+Augmentation made no difference in validation accuracy; both runs were flat at approximately 71% across all five epochs. The augmented run did reach a slightly lower validation loss by epoch four (~0.55 to ~0.51), though this the loss value increased during epoch five and it did not translate to the classification accuracy. The lack of meaningful improvement from the augmentation is likely due to the small dataset size, the limited ability of a simple CNN, and small validation set, all of which constrain how much any single training modification can improve the performance.
 
 
 ## 6 Transfer Learning
@@ -560,7 +560,7 @@ Here we load a pretrained **ResNet-18**, freeze its convolutional backbone, and 
 final fully-connected layer with a fresh 2-class head.
 
 ```{r transfer-model}
-train_ds_aug <- fundus_dataset(train_df, train_transform)
+train_ds_aug <- fundus_dataset(train_df, train_transform_fixed)
 train_dl_aug <- dataloader(train_ds_aug, batch_size = batch_size, shuffle = TRUE)
 
 
