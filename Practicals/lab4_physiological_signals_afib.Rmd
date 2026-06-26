@@ -560,6 +560,8 @@ train_keys |>
 
 **Q7 (1 mark)**: What does it mean for the ROC curve to be below the dotted line?
 
+It means that the model is performing worse than random guessing at those threshold values. It is more likely to misclassify observations than classify them correctly. This sometimes occurs when the score is accidentally inverted or the event level is not correctly specified but this is not the case here, as only a small portion of the curve dips below the line.
+
 ## 8 State Space (Hidden Markov Model)
 
 The state-space model formulation is: **what sequence of hidden states best explains the observed intervals?** 
@@ -671,6 +673,10 @@ train_keys |>
 ### Question 8
 
 **Q8 (2 marks):** In this HMM, what is *observed* and what is *hidden*? 
+
+In this HMM, the observed variables are the measured R-R intervals. The hidden variables are the underlying rhythm states that generated the intervals, which are never directly measured but is inferred by the model from the pattern of intervals. The two states correspond to a "regular" and a more "irregular" AF-like state.
+
+!!!!!!!
 
 ## 9 Comparing the Three Detectors
 
