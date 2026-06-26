@@ -143,8 +143,11 @@ glimpse(rr)
 
 **Q1 (2 marks):** Write a short data dictionary for `waveforms` and `rr` with your best guess explanation of the values and format of these datasets.
 
+There is a table below with the data dictionary:
+
 ```{r}
 waveforms_dictionary <- data.frame(
+  Dataset = "waveforms",
   Variable = c("record", "segment", "rhythm", "time", "ecg"),
   Format = c(
     "Character",
@@ -163,6 +166,7 @@ waveforms_dictionary <- data.frame(
 )
 
 rr_dictionary <- data.frame(
+  Dataset = "rr",
   Variable = c("record", "window", "rhythm", "beat", "rr"),
   Format = c(
     "Character",
@@ -180,14 +184,14 @@ rr_dictionary <- data.frame(
   )
 )
 
-knitr::kable(
+data_dictionary <- rbind(
   waveforms_dictionary,
-  caption = "Data Dictionary for waveforms"
+  rr_dictionary
 )
 
 knitr::kable(
-  rr_dictionary,
-  caption = "Data Dictionary for rr"
+  data_dictionary,
+  caption = "Combined Data Dictionary"
 )
 ```
 
