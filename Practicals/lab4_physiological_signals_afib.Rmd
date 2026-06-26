@@ -294,6 +294,8 @@ glimpse(waveforms_train)
 
 **Q3 (1 marks):** As part of these filters we are dividing the sampling rate in half. What does fs/2 represent in terms of the signal we've captured?
 
+fs/2 is the Nyquist frequency, which is the maximum frequency that can be captured in a signal sampled at fs Hz. Because the ECG was sampled at 250 Hz, fs/2 = 125 Hz, meaning that frequencies above 125 Hz cannot be reliably captured.
+
 ## 5 Exploratory Data Analysis
 
 Remember, we only explore the **training set**!
@@ -350,6 +352,10 @@ window_features |>
 ### Question 4
 
 **Q4 (2 marks):** Explain what this plot tells you about the R-R intervals in Normal vs AF samples.
+
+The plot shows that AF windows have shorter mean R-R intervals than Normal windows, suggesting a faster average heart rate. AF windows also have a higher SDNN values, indicating that there is more beat-to-beat variability in the timing of the heartbeats, which is expected given that AF is a cardiac arrhythmia.
+
+Overall, AF rhythms are more irregular and variable, whereas Normal rhythms have longer and more consistent R-R intervals.
 
 
 ## 6 Time Domain Model (ARIMA)
