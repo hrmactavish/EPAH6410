@@ -538,6 +538,7 @@ test_keys$freq_prob  <- predict(freq_model, newdata = test_keys, type = "respons
 
 The best predictors of AF in this dataset are `spectral_centroid` (p < 0.001), `spectral_entrioy` (p < 0.001), and `hf_frac` (p < 0.001), which are all highly significant. `peak_frac` is not a useful predictor because it is not statistically significant (p = 0.681). This mostly matches the hypotheses; higher entropy and centroid in AF are both confirmed. However, `hf_frac` has a negative coefficient, contradicting the expectation that AF pushes more power into high frequencies, possibly due to collinearity with `spectral_centroid`.
 
+!!!!!
 
 Similarly to the time-based model above, we have to pick a threshold on the logistic regression output to decide when to make a prediction of AF.  We can sweep possible thresholds from
 0 to 1 to again trace out the **ROC curve**. Each point is one cut-off for calling a window AF; the dashed
