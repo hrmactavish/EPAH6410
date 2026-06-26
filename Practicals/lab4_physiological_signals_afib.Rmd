@@ -726,17 +726,25 @@ This suggests that the predictability of R-R intervals was the most useful featu
 
 **Q10 (3 marks):** Suggest a way we could improve each of these models performance and suggest at least 3 additional analyses that it would be a good idea to perform before trying to use these in the real-world.
 
-Model Improvements:
+
+I cannot tell if the question for 1 each or for 1 for all 3:
+
+
+If it was for 1 each some model improvements would be:
 
 - ARIMA: Use longer R-R interval windows.
 - Frequency model: Try a classifier that is more flexible such as random forest.
 - HMM: Try to use more than just 2 hidden states to try and capture different rhythm patterns that people have.
 
+If it is 1 for all 3:
+
+- Increase the amount of time included in the dataset
+
 Additional Analyses:
 
 1. Subgroup performance analysis: evaluate the performances of different subgroups (such as age, sex, ethnicity, AF type, e.t.c.) to check for disparities in model performance.
 2. Validate the models on a different independent external dataset to ensure that the models are not making predictions based on things specific to the two datasets used.
-3. Test against patients with other cardiac arrhythmia (e.g. ventricular tachycardia) to assess whether the models can correctly distinguish AF from other conditions that also produce irregular R-R intervals, not just AF versus a healthy Normal rhythm.
+3. A sensitivity analysis where they test against patients with other cardiac arrhythmia (e.g. ventricular tachycardia) to assess whether the models can correctly distinguish AF from other conditions that also produce irregular R-R intervals, not just AF versus a healthy Normal rhythm.
 
 
 
