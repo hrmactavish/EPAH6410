@@ -716,9 +716,29 @@ test_scored |>
 
 **Q9 (2 marks):** How do these models compare to one another? 
 
+None of the models had what would typically be considered a good or excellent AUC score, but the best was Time (ARIMA) with an AUC of 0.692, followed by Frequency (logistic regression)	with an AUC of 0.625. The HMM state-space model performed the worst (AUC = 0.579).
+
+This suggests that the predictability of R-R intervals was the most useful feature for detecting AF in this dataset, while the frequency and state-space approaches were less effective.
+
+!!!!!!!
+
 ### Question 10
 
 **Q10 (3 marks):** Suggest a way we could improve each of these models performance and suggest at least 3 additional analyses that it would be a good idea to perform before trying to use these in the real-world.
+
+Model Improvements:
+
+- ARIMA: Use longer R-R interval windows.
+- Frequency model: Try a classifier that is more flexible such as random forest.
+- HMM: Try to use more than just 2 hidden states to try and capture different rhythm patterns that people have.
+
+Additional Analyses:
+
+1. Subgroup performance analysis: evaluate the performances of different subgroups (such as age, sex, ethnicity, AF type, e.t.c.) to check for disparities in model performance.
+2. Validate the models on a different independent external dataset to ensure that the models are not making predictions based on things specific to the two datasets used.
+3. Test against patients with other cardiac arrhythmia (e.g. ventricular tachycardia) to assess whether the models can correctly distinguish AF from other conditions that also produce irregular R-R intervals, not just AF versus a healthy Normal rhythm.
+
+
 
 ---
 
