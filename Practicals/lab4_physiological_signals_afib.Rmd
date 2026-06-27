@@ -542,7 +542,7 @@ test_keys$freq_prob  <- predict(freq_model, newdata = test_keys, type = "respons
 
 The best predictors of AF in this dataset are `hf_frac` (p < 0.001), `spectral_centroid` (p < 0.001), and `spectral_entropy` (p < 0.001), which are all highly significant. `peak_frac` contributes little to nothing to the model's predictions (p = 0.681). 
 
-The results mostly match the hypotheses. Both `spectral_entropy` and `spectral_centroid` have positive coefficients, confirming that AF windows have more spread-out spectra and higher centre-of-mass frequencies. `hf_frac` however has a negative coefficient, which is contrary to the hypothesis that AF pushes more power into high frequencies, it potentially suggests taht the relationship between high-frequency power and AF may be more complex than was previously hypothesized. `peak_frac` contributes little to the mode regardless of the direction of the estimation.
+The results mostly match the hypotheses. Both `spectral_entropy` and `spectral_centroid` have positive coefficients, confirming that AF windows have more spread-out spectra and higher centre-of-mass frequencies. `hf_frac` however has a negative coefficient, which is contrary to the hypothesis that AF pushes more power into high frequencies, it potentially suggests that the relationship between high-frequency power and AF may be more complex than was previously hypothesized. `peak_frac` contributes little to the model regardless of the direction of the estimation.
 
 
 Similarly to the time-based model above, we have to pick a threshold on the logistic regression output to decide when to make a prediction of AF.  We can sweep possible thresholds from
@@ -719,7 +719,7 @@ test_scored |>
 
 **Q9 (2 marks):** How do these models compare to one another? 
 
-As shown in the ROC plot, all three of the models perform fairly poorly on the test set, with non achieving what would typically be considered strong discrimination (AUC $\ge$ 0.80). The time model (ARIMA) model performed the best with an AUC of 0.692, followed by frequency logistic regression model (AUC = 0.625), and the state-space HMM performed the worst (AUC = 0.579, barely above chance). In the ROC plot, this ordering it visible; the blue ARIMA curve bends the closest to the top-left, while the green HMM curve is barely separated from the diagonal. 
+As shown in the ROC plot, all three of the models perform fairly poorly on the test set, with none achieving what would typically be considered strong discrimination (AUC $\ge$ 0.80). The time model (ARIMA) model performed the best with an AUC of 0.692, followed by frequency logistic regression model (AUC = 0.625), and the state-space HMM performed the worst (AUC = 0.579, barely above chance). In the ROC plot, this ordering it visible; the blue ARIMA curve bends the closest to the top-left, while the green HMM curve is barely separated from the diagonal. 
 
 This suggests that the predictability of R-R intervals was the most useful feature for detecting AF in this dataset, which makes sense given that unpredictability of the rhythm is a defining feature of AF, while the frequency and state-space approaches were less effective.
 
