@@ -466,7 +466,7 @@ train_keys |>
 
 **Q5 (1 marks):** What other type of curve could we use to select the threshold? (Hint: think back to earlier labs)
 
-A Precision-Recall curve is another option for threshold selection. Given that there is a class imbalance, where AF is the majority class, a precision-recall curve would be useful because it would also highlight how well the model performs on the minority class (Normal).
+A Precision-Recall curve is another option for threshold selection. It could be useful here as there is a class imbalance in the dataset.
 
 
 ## 7 Frequency Domain
