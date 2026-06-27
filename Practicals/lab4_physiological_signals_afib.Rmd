@@ -540,9 +540,10 @@ test_keys$freq_prob  <- predict(freq_model, newdata = test_keys, type = "respons
 
 **Q6 (2 marks)** Based on the output from summary above which frequency-based features are the best predictors of AF in this dataset?  Does this match our hypotheses (above) for what each of these features will capture?
 
-The best predictors of AF in this dataset are `spectral_centroid` (p < 0.001), `spectral_entrioy` (p < 0.001), and `hf_frac` (p < 0.001), which are all highly significant. `peak_frac` is not a useful predictor because it is not statistically significant (p = 0.681). This mostly matches the hypotheses; higher entropy and centroid in AF are both confirmed. However, `hf_frac` has a negative coefficient, contradicting the expectation that AF pushes more power into high frequencies, possibly due to collinearity with `spectral_centroid`.
+The best predictors of AF in this dataset are `spectral_centroid` (p < 0.001), `spectral_entropy` (p < 0.001), and `hf_frac` (p < 0.001), which are all highly significant. `peak_frac` contributes little to nothing to the model's predictions (p = 0.681). 
 
-!!!!!
+The results mostly match the hypotheses. Both `spectral_entropy` and `spectral_centroid` have positive coefficients, confirming that AF windows have more spread-out spectra and higher centre-of-mass frequencies. `hf_frac` however has a negative coefficient, which is contrary to the hypothesis that AF pushes more power into high frequencies, it potentially suggests taht the relationship between high-frequency power and AF may be more complex than was previously hypothesized. `peak_frac` contributes little to the mode regardless of the direction of the estimation.
+
 
 Similarly to the time-based model above, we have to pick a threshold on the logistic regression output to decide when to make a prediction of AF.  We can sweep possible thresholds from
 0 to 1 to again trace out the **ROC curve**. Each point is one cut-off for calling a window AF; the dashed
