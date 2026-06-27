@@ -678,9 +678,7 @@ train_keys |>
 
 **Q8 (2 marks):** In this HMM, what is *observed* and what is *hidden*? 
 
-In this HMM, the observed variables are the measured R-R intervals. The hidden variables are the underlying rhythm states that generated the intervals, which are never directly measured but is inferred by the model from the pattern of intervals. The two states correspond to a "regular" and a more "irregular" AF-like state.
-
-!!!!!!!
+In this HMM, the observed variables are the R-R interval measurements. The hidden variables are the two underlying rhythm states, which are never directly measured but are learned by the model from the distribution of R-R intervals. The two states correspond to a "regular" (Normal) and a more "irregular" (AF) state.
 
 ## 9 Comparing the Three Detectors
 
