@@ -177,9 +177,9 @@ rr_dictionary <- data.frame(
   ),
   Description = c(
     "Unique identifier for each patient record.",
-    "Identifier for which 128-beat window this beat belongs to.",
+    "Identifier for which 128-beat window the beat belongs to (zero-indexed).",
     "Heart rhythm classification (AF or Normal).",
-    "Beat number within the window (0-29).",
+    "Beat number within the 128-beat window.",
     "R-R interval length between consecutive heartbeats."
   )
 )
@@ -357,7 +357,7 @@ window_features |>
 
 **Q4 (2 marks):** Explain what this plot tells you about the R-R intervals in Normal vs AF samples.
 
-The plot shows that AF windows have shorter mean R-R intervals than Normal windows, suggesting a faster average heart rate. AF windows also have a higher SDNN values, indicating that there is more beat-to-beat variability in the timing of the heartbeats, which is expected given that AF is a cardiac arrhythmia.
+The plot shows that AF windows have shorter mean R-R intervals than Normal windows, suggesting a faster average heart rate. AF windows also have a higher SDNN values, indicating that there is more heart rate variability, which is expected given that AF is a type of cardiac arrhythmia.
 
 Overall, AF rhythms are more irregular and variable, whereas Normal rhythms have longer and more consistent R-R intervals.
 
@@ -564,7 +564,7 @@ train_keys |>
 
 **Q7 (1 mark)**: What does it mean for the ROC curve to be below the dotted line?
 
-It means that the model is performing worse than random guessing at those threshold values. It is more likely to misclassify observations than classify them correctly. This sometimes occurs when the score is accidentally inverted or the event level is not correctly specified but this is not the case here, as only a small portion of the curve dips below the line.
+It means that the model is performing worse than random guessing at those threshold values. It is more likely to misclassify observations than classify them correctly. This sometimes occurs when the score is accidentally inverted or the event level is not correctly specified, but this is not the case here, as only a small portion of the curve dips below the line.
 
 ## 8 State Space (Hidden Markov Model)
 
@@ -720,7 +720,7 @@ test_scored |>
 
 **Q9 (2 marks):** How do these models compare to one another? 
 
-None of the models had what would typically be considered a good or excellent AUC score, but the best was Time (ARIMA) with an AUC of 0.692, followed by Frequency (logistic regression)	with an AUC of 0.625. The HMM state-space model performed the worst (AUC = 0.579).
+None of the models had what would typically be considered strong discrimination (AUC $\ge$ 0.80), but the best was Time (ARIMA) with an AUC of 0.692, followed by Frequency (logistic regression)	with an AUC of 0.625. The HMM state-space model performed the worst (AUC = 0.579).
 
 This suggests that the predictability of R-R intervals was the most useful feature for detecting AF in this dataset, while the frequency and state-space approaches were less effective.
 
@@ -730,15 +730,18 @@ This suggests that the predictability of R-R intervals was the most useful featu
 
 **Q10 (3 marks):** Suggest a way we could improve each of these models performance and suggest at least 3 additional analyses that it would be a good idea to perform before trying to use these in the real-world.
 
-To improve each of the models they could include more of the data (have more then just 10 seconds of the windows).
+I was unsure about if this question was asking for one improvement across all three models or one per model, so I tried to address both below:
 
-Additional Analyses:
+One improvement applicable to all three models would be to use longer windows of R-R interval data. The waveform snippets that we used are only 10 seconds (29 beats), which may not capture enough of the irregular pattern of AF to reliably distinguish it from normal rhythm. Using the full 128-beat (~ 2 minute) windows from the rr dataset, or longer recordings, would give each model more signal to work with. 
 
-1. Subgroup performance analysis: evaluate the performances of different subgroups (such as age, sex, ethnicity, AF type, e.t.c.) to check for disparities in model performance.
-2. Validate the models on a different independent external dataset to ensure that the models are not making predictions based on things specific to the two datasets used.
-3. A sensitivity analysis where they test against patients with other cardiac arrhythmia (e.g. ventricular tachycardia) to assess whether the models can correctly distinguish AF from other conditions that also produce irregular R-R intervals, not just AF versus a healthy Normal rhythm.
+If one improvement per model is intended: the ARIMA model could be improved by training on more data, as the current training set is relatively small and a larger sample of patients would help the model better learn what typical Normal and AF intervals look like. The frequency model currently uses logistic regression to combine the four features into an AF probability, but a more flexible classifier such as a random forest could better capture non-linear relationships that might exist between the features and AF. The HMM could be extended to more than two hidden states to better capture intermediate or transitional rhythms rather than forcing a binary regular or irregular distinction.
 
-!!!!!!!!!!
+Before trying any of these models in the real world, at least three additional analyses should be preformed:
+
+1. Subgroup performance analysis: model performance should be evaluated across clinically relevant subgroups such as age, sex, and AF type to identify whether the models perform systematically worse for certain patient groups.
+2. Specificity to AF vs other arrhythmias: the models should be tested against patients with other irregular rhythms, such as ventricular tachycardia, to determine whether they are detecting AF specifically or simply any deviation from regular sinus rhythm.
+3. External validation: all three models should be tested on an entirely independent dataset from a different institution or recording device to confirm that the performance generalizes outside of the MIT-BIH Atrial Fibrillation Database used in this study.
+
 
 ---
 
