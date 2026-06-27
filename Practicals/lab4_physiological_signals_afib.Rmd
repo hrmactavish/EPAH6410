@@ -720,11 +720,9 @@ test_scored |>
 
 **Q9 (2 marks):** How do these models compare to one another? 
 
-None of the models had what would typically be considered strong discrimination (AUC $\ge$ 0.80), but the best was Time (ARIMA) with an AUC of 0.692, followed by Frequency (logistic regression)	with an AUC of 0.625. The HMM state-space model performed the worst (AUC = 0.579).
+As shown in the ROC plot, all three of the models perform fairly poorly on the test set, with non achieving what would typically be considered strong discrimination (AUC $\ge$ 0.80). The time model (ARIMA) model performed the best with an AUC of 0.692, followed by frequency logistic regression model (AUC = 0.625), and the state-space HMM performed the worst (AUC = 0.579, barely above chance). In the ROC plot, this ordering it visible; the blue ARIMA curve bends the closest to the top-left, while the green HMM curve is barely separated from the diagonal. 
 
-This suggests that the predictability of R-R intervals was the most useful feature for detecting AF in this dataset, while the frequency and state-space approaches were less effective.
-
-!!!!!!!
+This suggests that the predictability of R-R intervals was the most useful feature for detecting AF in this dataset, which makes sense given that unpredictability of the rhythm is a defining feature of AF, while the frequency and state-space approaches were less effective.
 
 ### Question 10
 
