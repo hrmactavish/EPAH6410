@@ -229,7 +229,7 @@ bind_rows(
 
 **Q2 (2 marks):** Why do we split on the **record** instead of the **segment**? What could the models end up learning to recognise instead of AF if we split by **segment**?
 
-We split by record instead of segment because multiple segments from the same patient appear in the dataset, and data from the same patient is correlated; they share the same heart, physiology, and recording conditions. If we split by segment, the same patient could appear in both training and test sets, and the model could learn to recognize individual patients rather than AF itself. This would produce overly optimistic performance estimates that would likely not generalize to new patients.
+We split by record instead of segment because multiple segments from the same patient appear in the dataset, and data from the same patient is correlated; they share the same heart physiology and anatomy, and same recording conditions. If we split by segment, the same patient could appear in both training and test sets, and the model could learn to recognize individual patients rather than AF itself. This would produce overly optimistic performance estimates that would likely not generalize to new patients.
 
 
 ## 4 Cleaning - Frequency Filtering
