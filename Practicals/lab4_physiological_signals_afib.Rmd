@@ -179,7 +179,7 @@ rr_dictionary <- data.frame(
     "Unique identifier for each patient record.",
     "Identifier for which 128-beat window the beat belongs to (zero-indexed).",
     "Heart rhythm classification (AF or Normal).",
-    "Beat number within the 128-beat window.",
+    "Beat number within the 128-beat window (zero-indexed).",
     "R-R interval length between consecutive heartbeats."
   )
 )
